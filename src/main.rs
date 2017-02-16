@@ -6,10 +6,21 @@ extern crate postgres;
 extern crate rand;
 
 mod spacebar_generator;
+mod user;
 
 use postgres::{Connection, TlsMode};
 use spacebar_generator::generate;
+use user::readPostgreSQL;
 use serde_json::Value;
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct User {
+    id: i32,
+    username: String,
+    email: String,
+    password: String,
+    userID: i32,
+}
 
 struct Person {
     id: i32,
@@ -26,6 +37,8 @@ struct Point {
 
 fn main() {
 
+    let usertes = user::readPostgreSQL();
+    println!("{:?}", usertes);
 
     let point = Point { x: 1, y: 2 };
 
@@ -36,7 +49,7 @@ fn main() {
     println!("deserialized = {:?}", deserialized);
 
     println!("{}", spacebar_generator::generate());
-    let conn = Connection::connect("postgresql://root:toor@localhost", TlsMode::None)
+    let conn = Connection::connect("postgresql://root:toor@localhost/spacebardb", TlsMode::None)
             .unwrap();
 
     conn.execute("CREATE TABLE person (
