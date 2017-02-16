@@ -6,10 +6,12 @@ extern crate postgres;
 extern crate rand;
 
 mod spacebar_generator;
+mod token_generator;
 mod user;
 
 use postgres::{Connection, TlsMode};
 use spacebar_generator::generate;
+use token_generator::gen_token;
 use user::readPostgreSQL;
 use serde_json::Value;
 
@@ -36,6 +38,9 @@ struct Point {
 
 
 fn main() {
+
+    //Token Generator Test
+    println!("{}", token_generator::gen_token());
 
     let usertes = user::readPostgreSQL();
     println!("{:?}", usertes);
