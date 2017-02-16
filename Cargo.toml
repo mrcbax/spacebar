@@ -5,3 +5,4 @@ authors = ["diego"]
 
 [dependencies]
 postgres="0.13"
+rand = "0.3"
