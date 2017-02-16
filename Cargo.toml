@@ -1,0 +1,6 @@
+[package]
+name = "spacebar"
+version = "0.1.0"
+authors = ["diego"]
+
+[dependencies]
