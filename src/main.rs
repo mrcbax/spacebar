@@ -1,10 +1,15 @@
 
+#[macro_use]
+extern crate serde_derive;
+extern crate serde_json;
 extern crate postgres;
 extern crate rand;
+
 mod spacebar_generator;
 
 use postgres::{Connection, TlsMode};
 use spacebar_generator::generate;
+use serde_json::Value;
 
 struct Person {
     id: i32,
@@ -12,7 +17,24 @@ struct Person {
     data: Option<Vec<u8>>
 }
 
+#[derive(Serialize, Deserialize, Debug)]
+struct Point {
+    x: i32,
+    y: i32,
+}
+
+
 fn main() {
+
+
+    let point = Point { x: 1, y: 2 };
+
+    let serialized = serde_json::to_string(&point).unwrap();
+    println!("serialized = {}", serialized);
+
+    let deserialized: Point = serde_json::from_str(&serialized).unwrap();
+    println!("deserialized = {:?}", deserialized);
+
     println!("{}", spacebar_generator::generate());
     let conn = Connection::connect("postgresql://root:toor@localhost", TlsMode::None)
             .unwrap();

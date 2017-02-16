@@ -6,3 +6,6 @@ authors = ["diego"]
 [dependencies]
 postgres="0.13"
 rand = "0.3"
+serde = "0.9"
+serde_derive = "0.9"
+serde_json = "0.9"
