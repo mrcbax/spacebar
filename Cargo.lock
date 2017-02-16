@@ -3,6 +3,7 @@ name = "spacebar"
 version = "0.1.0"
 dependencies = [
  "postgres 0.13.6 (registry+https://github.com/rust-lang/crates.io-index)",
+ "rand 0.3.15 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -101,6 +102,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "rand"
+version = "0.3.15"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+dependencies = [
+ "libc 0.2.20 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
 name = "siphasher"
 version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -119,4 +128,5 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 "checksum postgres 0.13.6 (registry+https://github.com/rust-lang/crates.io-index)" = "a1ed6564a52406dbc555719ba186f5309c790bc5fd44a656bb787d1c49fbc6ac"
 "checksum postgres-protocol 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)" = "283e27d237a5772ef00c9e3f97e632f9a565ff514761af3e88e129576af7077c"
 "checksum postgres-shared 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)" = "ba919eba78ade418bdee00d325caccb0946ab0ccfeaeb364c0fe157d2a81c382"
+"checksum rand 0.3.15 (registry+https://github.com/rust-lang/crates.io-index)" = "022e0636ec2519ddae48154b028864bdce4eaf7d35226ab8e65c611be97b189d"
 "checksum siphasher 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)" = "2ffc669b726f2bc9a3bcff66e5e23b56ba6bf70e22a34c3d7b6d0b3450b65b84"

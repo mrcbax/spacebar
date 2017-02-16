@@ -1,7 +1,10 @@
 
 extern crate postgres;
+extern crate rand;
+mod spacebar_generator;
 
 use postgres::{Connection, TlsMode};
+use spacebar_generator::generate;
 
 struct Person {
     id: i32,
@@ -10,6 +13,7 @@ struct Person {
 }
 
 fn main() {
+    println!("{}", spacebar_generator::generate());
     let conn = Connection::connect("postgresql://root:toor@localhost", TlsMode::None)
             .unwrap();
 
