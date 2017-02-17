@@ -10,19 +10,21 @@ struct Identifier {
     puser: u32
 }
 
-pub fn generate() -> String {
-    let mut ident: Identifier = gen_ident();
+pub fn generate_new_user_id() -> String {
+    let mut rng = rand::thread_rng();
+    let mut ident: Identifier = Identifier{user: rng.gen::<u64>(), puser: 0};
     let mut bin_nums: String = String::from(format!("{:b}", ident.user));
-    bin_nums += format!("{:b}", ident.puser).as_str();
-    let bar_nums = bin_to_string(&bin_nums);
-    String::from(format!("The binary representation is: {0}\nBarcode representation is: {1}", bin_nums, bar_nums))
+    String::from(format!("{}", bin_to_string(&bin_nums)))
 }
 
-fn gen_ident() -> Identifier {
+pub fn generate_spacebar_with_user_id(UID: String) -> String {
     let mut rng = rand::thread_rng();
-    let mut ident = Identifier {user: (rng.gen::<u64>()), puser: (rng.gen::<u32>())};
-    ident
+    let mut ident: Identifier = Identifier{user: 0, puser: rng.gen::<u32>()};
+    let mut bin_nums: String = String::from(format!("{:b}", ident.puser));
+    let mut full_bar: String = String::from(format!("{0}{1}", UID, bin_to_string(&bin_nums)));
+    String::from(format!("{0}{1}", &bin_nums, full_bar))
 }
+
 fn bin_to_string (bin_rep: &String) -> String {
     let mut bar_rep = String::new();
     for c in bin_rep.chars() {
