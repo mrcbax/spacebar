@@ -52,7 +52,7 @@ pub fn insertBarCode(name: String, descrip: String) {
         true => test_str = spacebar_generator::generate_barcode_from_previous(barcode_prev)
     }
 
-    println!("{:?}", test_str);
+    println!("{}", test_str);
     let bar =  barUser {
         user_ID: String::from("1"),
         user_barcode: String::from(test_str),

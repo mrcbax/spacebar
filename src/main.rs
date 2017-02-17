@@ -47,7 +47,7 @@ fn hello() -> String {
 
 fn main() {
     // Rocket Tester
-    //rocket::ignite().mount("/", routes![hello]).launch();
+    rocket::ignite().mount("/", routes![hello]).launch();
 
     //Token Generator Test
     // for i in 1 .. 1000 {
@@ -68,7 +68,9 @@ fn main() {
 
     let mut u = "Diego Bustamante";
     let mut d = "This is the very second barcode!";
-    insert::insertBarCode(format!("{:?}", u), format!("{:?}", d));
+    println!("{}", u);
+    println!("{}", d);
+    insert::insertBarCode(String::from(u), String::from(d));
     // u = "Chad Baxter";
     // d = "And... if you see this, good job.";
     // insert::insertBarCode(format!("{:?}", u), format!("{:?}", d));
