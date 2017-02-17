@@ -17,10 +17,11 @@ CREATE TABLE users(
 DROP TABLE IF EXISTS barcode;
 CREATE TABLE barcode(
 	id_user SERIAL NOT NULL,
+	user_barcode text,
 	name_barcode text,
 	description text,
-	user_barcode text
 );
+
 
 GRANT ALL on users TO root;
 GRANT ALL on users_user_id_seq TO root;

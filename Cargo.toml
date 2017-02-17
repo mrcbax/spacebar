@@ -4,6 +4,8 @@ version = "0.1.0"
 authors = ["diego"]
 
 [dependencies]
+rocket = "0.2.0"
+rocket_codegen = "0.2.0"
 postgres="0.13"
 rand = "0.3"
 serde = "0.9"

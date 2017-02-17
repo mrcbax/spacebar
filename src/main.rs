@@ -1,8 +1,13 @@
+#![feature(plugin)]
+#![plugin(rocket_codegen)]
 #[macro_use]
 extern crate serde_derive;
 extern crate serde_json;
 extern crate postgres;
 extern crate rand;
+
+
+extern crate rocket;
 
 mod spacebar_generator;
 mod token_generator;
@@ -24,7 +29,18 @@ pub struct User {
     password: String,
 }
 
+#[get("/query")]
+fn hello() -> String {
+    let usertes = user::readPostgreSQL();
+    // println!("{:?}", usertes);
+    format!("{:?}", usertes)
+}
+
+
 fn main() {
+    // Rocket Tester
+    rocket::ignite().mount("/", routes![hello]).launch();
+
     //Token Generator Test
     for i in 1 .. 1000 {
         println!("{}", token_generator::gen_token());
@@ -37,8 +53,8 @@ fn main() {
     println!("{}", spacebar_generator::generate_barcode_from_previous(String::from(test_str.as_str())));
     //println!("{}", spacebar_generator::generate_barcode());
 
-    let usertes = user::readPostgreSQL();
-    println!("{:?}", usertes);
+    // let usertes = user::readPostgreSQL();
+    // println!("{:?}", usertes);
 
     let inser = insert::insertUser();
 
