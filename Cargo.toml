@@ -4,3 +4,4 @@ version = "0.1.0"
 authors = ["diego"]
 
 [dependencies]
+mongo_driver = "0.5.0"
