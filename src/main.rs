@@ -45,9 +45,9 @@ fn main() {
 
     //Spacebar Generator Test
     //First, generate the user partion of the spacebar.
-    let test_str = spacebar_generator::generate_new_user_id();
+    //let test_str = spacebar_generator::generate_new_user_id();
     //Generate and print the full spacebar, passing the previously generated user portion.
-    println!("{}", spacebar_generator::generate_spacebar_with_user_id(test_str));
+    //println!("{}", spacebar_generator::generate_spacebar_with_user_id(test_str));
 
     let usertes = user::readPostgreSQL();
     println!("{:?}", usertes);
