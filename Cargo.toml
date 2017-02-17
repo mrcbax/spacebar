@@ -4,12 +4,8 @@ version = "0.1.0"
 authors = ["diego"]
 
 [dependencies]
-<<<<<<< HEAD
-mongo_driver = "0.5.0"
-=======
 postgres="0.13"
 rand = "0.3"
 serde = "0.9"
 serde_derive = "0.9"
 serde_json = "0.9"
->>>>>>> 2352ce8ce15d3b2736a836c93ee2a7c0c06cec68
