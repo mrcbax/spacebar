@@ -1,25 +1,29 @@
+
+extern crate serde_json;
 use postgres::{Connection, TlsMode};
-use serde_json::Value;
+use serde_json::*;
 use User;
 
-pub fn readPostgreSQL() -> User{
+pub fn readPostgreSQL() -> String{
     let conn = Connection::connect("postgresql://root:toor@localhost/spacebardb", TlsMode::None).unwrap();
     let mut users = User{
-        id: 0,
+        userID: 0,
         username: String::new(),
         email: String::new(),
         password: String::new(),
-        userID: 0,
     };
 
-    for row in &conn.query("SELECT id, username, email, password, userid FROM users", &[]).unwrap() {
+    for row in &conn.query("SELECT user_id, user_name, email, password FROM users", &[]).unwrap() {
         users = User {
-            id: row.get(0),
+            userID: row.get(0),
             username: row.get(1),
             email: row.get(2),
             password: row.get(3),
-            userID: row.get(4)
         };
     }
-    return users;
+
+    let serialized = serde_json::to_string(&users).unwrap();
+    println!("serialized = {:?}", serialized);
+
+    return serialized;
 }
