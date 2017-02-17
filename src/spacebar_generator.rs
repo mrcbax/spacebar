@@ -23,6 +23,7 @@ pub fn generate_barcode () -> String {
     }
     let mut ident: Identifier = Identifier{user: String::from(u64_string.as_str()), puser: String::from(u32_string.as_str())};
     let bin_nums:String = u64_string + &u32_string;
+    println!("{:?}", "Added as new");
     String::from(format!("{}", bin_to_string(&bin_nums)))
 }
 
@@ -34,6 +35,7 @@ pub fn generate_barcode_from_previous (last_gen: String) -> String {
     for i in 0 .. 32 {
         u32_string += &format!("{}", rng.gen_range(0, 2));
     }
+    println!("{:?}", "Added with previous");
     String::from(format!("{}", bin_to_string(&String::from(u64_string + &u32_string))))
 }
 

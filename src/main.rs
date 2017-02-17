@@ -29,9 +29,17 @@ pub struct User {
     password: String,
 }
 
+#[derive(Serialize, Deserialize, Debug)]
+pub struct barUser {
+    user_ID: String,
+    user_barcode: String,
+    name_barcode: String,
+    description: String,
+}
+
 #[get("/query")]
 fn hello() -> String {
-    let usertes = user::readPostgreSQL();
+    let usertes = user::readUserBarcode();
     // println!("{:?}", usertes);
     format!("{:?}", usertes)
 }
@@ -39,7 +47,7 @@ fn hello() -> String {
 
 fn main() {
     // Rocket Tester
-    rocket::ignite().mount("/", routes![hello]).launch();
+    //rocket::ignite().mount("/", routes![hello]).launch();
 
     //Token Generator Test
     // for i in 1 .. 1000 {
@@ -48,16 +56,22 @@ fn main() {
 
     //Spacebar Generator Test
     //First, generate the user partion of the spacebar.
-    let test_str = spacebar_generator::generate_barcode();
+    //let test_str = spacebar_generator::generate_barcode();
     //Generate and print the full spacebar, passing the previously generated user portion.
-    println!("{}", spacebar_generator::generate_barcode_from_previous(String::from(test_str.as_str())));
+    //println!("{}", spacebar_generator::generate_barcode_from_previous(String::from(test_str.as_str())));
     //println!("{}", spacebar_generator::generate_barcode());
 
     // let usertes = user::readPostgreSQL();
     // println!("{:?}", usertes);
 
-    let inser = insert::insertBarCode(format!("{:?}", "Thing"), format!("{:?}", "Thing2"));
+    // let insertu = insert::insertUser();
 
+    let mut u = "Diego Bustamante";
+    let mut d = "This is the very second barcode!";
+    insert::insertBarCode(format!("{:?}", u), format!("{:?}", d));
+    // u = "Chad Baxter";
+    // d = "And... if you see this, good job.";
+    // insert::insertBarCode(format!("{:?}", u), format!("{:?}", d));
 
     let conn = Connection::connect("postgresql://root:toor@localhost/spacebardb", TlsMode::None)
             .unwrap();
