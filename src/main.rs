@@ -26,26 +26,22 @@ pub struct User {
 
 fn main() {
     //Token Generator Test
-    println!("{}", token_generator::gen_token());
+    /*for i in 1 .. 1000 {
+        println!("{}", token_generator::gen_token());
+    }*/
 
     //Spacebar Generator Test
     //First, generate the user partion of the spacebar.
-    //let test_str = spacebar_generator::generate_new_user_id();
+    let test_str = spacebar_generator::generate_barcode();
     //Generate and print the full spacebar, passing the previously generated user portion.
-    //println!("{}", spacebar_generator::generate_spacebar_with_user_id(test_str));
+    println!("{}", spacebar_generator::generate_barcode_from_previous(String::from(test_str.as_str())));
+    //println!("{}", spacebar_generator::generate_barcode());
 
     let usertes = user::readPostgreSQL();
     println!("{:?}", usertes);
 
     let inser = insert::insertUser();
 
-    let point = Point { x: 1, y: 2 };
-
-    let serialized = serde_json::to_string(&point).unwrap();
-    println!("serialized = {}", serialized);
-
-    let deserialized: Point = serde_json::from_str(&serialized).unwrap();
-    println!("deserialized = {:?}", deserialized);
 
     let conn = Connection::connect("postgresql://root:toor@localhost/spacebardb", TlsMode::None)
             .unwrap();
