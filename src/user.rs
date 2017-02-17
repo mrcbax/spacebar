@@ -25,12 +25,9 @@ pub fn readPostgreSQL() -> String{
             password: row.get(3),
         };
          owned_string = serde_json::to_string(&users).unwrap();
-         println!("{:?}", owned_string);
+         println!("HERE: {:?}", owned_string);
 
          serialized.push_str(&owned_string);
-
-         
-
     }
 
     // println!("Here:{:?}", users);

@@ -18,7 +18,7 @@ use postgres::{Connection, TlsMode};
 use spacebar_generator::*;
 use token_generator::gen_token;
 use user::readPostgreSQL;
-use insert::insertUser;
+use insert::*;
 use serde_json::Value;
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -42,9 +42,9 @@ fn main() {
     rocket::ignite().mount("/", routes![hello]).launch();
 
     //Token Generator Test
-    for i in 1 .. 1000 {
-        println!("{}", token_generator::gen_token());
-    }
+    // for i in 1 .. 1000 {
+    //     println!("{}", token_generator::gen_token());
+    // }
 
     //Spacebar Generator Test
     //First, generate the user partion of the spacebar.
@@ -56,7 +56,7 @@ fn main() {
     // let usertes = user::readPostgreSQL();
     // println!("{:?}", usertes);
 
-    let inser = insert::insertUser();
+    let inser = insert::insertBarCode(format!("{:?}", "Thing"), format!("{:?}", "Thing2"));
 
 
     let conn = Connection::connect("postgresql://root:toor@localhost/spacebardb", TlsMode::None)
