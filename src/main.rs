@@ -40,7 +40,6 @@ struct Point {
 
 
 fn main() {
-
     //Token Generator Test
     println!("{}", token_generator::gen_token());
 

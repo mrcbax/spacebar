@@ -9,6 +9,7 @@ CREATE TABLE users(
 	user_name VARCHAR(25),
 	email VARCHAR(225),
 	password VARCHAR(225),
+	last_barcode INT DEFAULT NULL,
 	PRIMARY KEY(user_ID)
 );
 
@@ -18,14 +19,13 @@ CREATE TABLE barcode(
 	id_user SERIAL NOT NULL,
 	name_barcode text,
 	description text,
-	user_barcode SERIAL
+	user_barcode text
 );
 
 GRANT ALL on users TO root;
 GRANT ALL on users_user_id_seq TO root;
 GRANT ALL on barcode TO root;
-
-
+GRANT ALL on barcode_id_user_seq TO root;
 
 INSERT INTO users(user_name,email,password) VALUES('testuser','thisisfake@fake.com','exposed');
 INSERT INTO users(user_name,email,password) VALUES('testuser2','thisisfake2@fake.com','exposed2');
