@@ -26,9 +26,9 @@ pub struct User {
 
 fn main() {
     //Token Generator Test
-    /*for i in 1 .. 1000 {
+    for i in 1 .. 1000 {
         println!("{}", token_generator::gen_token());
-    }*/
+    }
 
     //Spacebar Generator Test
     //First, generate the user partion of the spacebar.
