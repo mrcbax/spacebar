@@ -1,2 +1,0 @@
-#Overview
-This software is intended to bridge the gap between the web server and the database server.  Using python sockets, the incomming requests are analized and cleaned preventing the execution of arbitrary code.  The clean requests are then passed to the data base manager where they are processed in the data base.  The response from the database is then cleaned to normalize any errors ad returned to the page.
