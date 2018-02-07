@@ -5,21 +5,23 @@ use rand::Rng;
 static ZERO: &'static str = "\u{FEFF}";
 static ONE: &'static str = "\u{200B}";
 
-struct Identifiers {
-    user_id: String,
-    spacebars: Vec<Spacebar>
+#[derive(Serialize, Deserialize, Debug)]
+pub struct Identifiers {
+    pub user_id: String,
+    pub spacebars: Vec<Spacebar>
 }
 
-struct Spacebar {
-    name: String,
-    desc: String,
-    spacebar: String
+#[derive(Serialize, Deserialize, Debug)]
+pub struct Spacebar {
+    pub name: String,
+    pub desc: String,
+    pub spacebar: String
 }
 
-fn new_user_id() -> String {
+pub fn new_user_id() -> String {
     let mut rng = rand::thread_rng();
     let mut u64_string = String::new();
-    for i in 0 .. 64 {
+    for _ in 0 .. 64 {
         u64_string += &format!("{}", rng.gen_range(0, 2));
     }
     String::from(format!("{}", bin_to_string(&u64_string)))
@@ -29,11 +31,11 @@ pub fn generate_barcode(user_id: String, name: String, desc: String) -> Identifi
     let mut rng = rand::thread_rng();
     let mut u32_string = String::new();
 
-    for i in 0 .. 32 {
+    for _ in 0 .. 32 {
         u32_string += &format!("{}", rng.gen_range(0, 2));
     }
 
-    let bin_nums:String = user_id + &u32_string;
+    let bin_nums: String = String::from(format!("{}{}", &user_id, u32_string));
 
     let spacebar: Spacebar = Spacebar{
         name: name,
@@ -49,7 +51,7 @@ pub fn generate_barcode_from_previous (mut ident: Identifiers, name: String, des
     let mut rng = rand::thread_rng();
     let mut u32_string = String::new();
 
-    for i in 0 .. 32 {
+    for _ in 0 .. 32 {
         u32_string += &format!("{}", rng.gen_range(0, 2));
     }
 
@@ -75,7 +77,7 @@ fn bin_to_string (bin_rep: &String) -> String {
     }
     bar_rep
 }
-fn string_to_bin (barcode_string: &String) -> String {
+pub fn string_to_bin (barcode_string: &String) -> String {
     let mut bin_string = String::new();
     for c in barcode_string.chars() {
         if c.to_string() == ZERO {

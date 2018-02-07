@@ -7,3 +7,6 @@ authors = ["Chad Baxter"]
 clap = "*"
 clipboard = "*"
 rand = "*"
+serde = "*"
+serde_derive = "*"
+serde_json = "*"
