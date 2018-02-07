@@ -5,38 +5,62 @@ use rand::Rng;
 static ZERO: &'static str = "\u{FEFF}";
 static ONE: &'static str = "\u{200B}";
 
-struct Identifier {
-    user: String,
-    puser: String
+struct Identifiers {
+    user_id: String,
+    spacebars: Vec<Spacebar>
 }
 
-pub fn generate_barcode () -> String {
+struct Spacebar {
+    name: String,
+    desc: String,
+    spacebar: String
+}
+
+fn new_user_id() -> String {
     let mut rng = rand::thread_rng();
     let mut u64_string = String::new();
-    let mut u32_string = String::new();
     for i in 0 .. 64 {
         u64_string += &format!("{}", rng.gen_range(0, 2));
     }
-
-    for i in 0 .. 32 {
-        u32_string += &format!("{}", rng.gen_range(0, 2));
-    }
-    let mut ident: Identifier = Identifier{user: String::from(u64_string.as_str()), puser: String::from(u32_string.as_str())};
-    let bin_nums:String = u64_string + &u32_string;
-    println!("{:?}", "Added as new");
-    String::from(format!("{}", bin_to_string(&bin_nums)))
+    String::from(format!("{}", bin_to_string(&u64_string)))
 }
 
-pub fn generate_barcode_from_previous (last_gen: String) -> String {
+pub fn generate_barcode(user_id: String, name: String, desc: String) -> Identifiers {
     let mut rng = rand::thread_rng();
-    let string_bin = string_to_bin(&last_gen);
-    let mut u64_string = String::from(string_bin.split_at(64).0);
     let mut u32_string = String::new();
+
     for i in 0 .. 32 {
         u32_string += &format!("{}", rng.gen_range(0, 2));
     }
-    println!("{:?}", "Added with previous");
-    String::from(format!("{}", bin_to_string(&String::from(u64_string + &u32_string))))
+
+    let bin_nums:String = user_id + &u32_string;
+
+    let spacebar: Spacebar = Spacebar{
+        name: name,
+        desc: desc,
+        spacebar: String::from(format!("{}", bin_to_string(&bin_nums)))
+    };
+
+    let spacebars: Vec<Spacebar> = vec!(spacebar);
+    Identifiers{user_id: user_id, spacebars: spacebars}
+}
+
+pub fn generate_barcode_from_previous (mut ident: Identifiers, name: String, desc: String) -> Identifiers {
+    let mut rng = rand::thread_rng();
+    let mut u32_string = String::new();
+
+    for i in 0 .. 32 {
+        u32_string += &format!("{}", rng.gen_range(0, 2));
+    }
+
+    let spacebar = Spacebar{
+        name: name,
+        desc: desc,
+        spacebar: String::from(format!("{}{}", ident.user_id, bin_to_string(&String::from(u32_string))))
+    };
+
+    ident.spacebars.push(spacebar);
+    ident
 }
 
 fn bin_to_string (bin_rep: &String) -> String {

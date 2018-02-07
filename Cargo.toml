@@ -4,5 +4,6 @@ version = "0.1.0"
 authors = ["Chad Baxter"]
 
 [dependencies]
+clap = "*"
 clipboard = "*"
 rand = "*"
