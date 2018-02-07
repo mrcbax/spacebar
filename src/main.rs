@@ -9,3 +9,7 @@ use clipboard::*;
 use database::*;
 use generator::*;
 
+pub fn main() {
+    print!("unimplemented")
+}
+
