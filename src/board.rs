@@ -1,5 +1,5 @@
-//clipboard code
-use clipboard::*;
+use clipboard::ClipboardProvider;
+use clipboard::ClipboardContext;
 
 pub fn parse_clipboard() -> String {
     unimplemented!();
