@@ -1,6 +1,6 @@
 Project Spacebar [![](https://travis-ci.org/LogoiLab/spacebar.svg?branch=master)](https://travis-ci.org/LogoiLab/spacebar)
 ===
-An anti-plagiarism tool based null width characters.
+An anti-plagiarism tool based on null width characters.
 
 Create a tag give it a name and description. It gets added to your clipboard. Paste it in any code or document either in comments or actual code (if your compiler doesn't care about whitespace characters).
 
