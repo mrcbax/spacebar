@@ -10,6 +10,7 @@ rust:
 matrix:
   allow_failures:
     - rust: beta
+    - rust: stable
 
 notifications:
     email: false
