@@ -2,6 +2,8 @@ extern crate rand;
 
 use rand::Rng;
 
+use board::*;
+
 pub static ZERO: &'static str = "\u{FEFF}";
 pub static ONE: &'static str = "\u{200B}";
 
@@ -45,6 +47,7 @@ pub fn generate_barcode(user_name: String, user_id: String, name: String, desc: 
     };
 
     let spacebars: Vec<Spacebar> = vec!(spacebar);
+    export_clipboard(bin_nums);
     Identifiers{user_name: user_name, user_id: user_id, spacebars: spacebars}
 }
 
@@ -61,7 +64,7 @@ pub fn generate_barcode_from_previous (mut ident: Identifiers, name: String, des
         desc: desc,
         spacebar: String::from(format!("{}{}", ident.user_id, bin_to_string(&String::from(u32_string))))
     };
-
+    export_clipboard(spacebar.clone().spacebar);
     ident.spacebars.push(spacebar);
     ident
 }

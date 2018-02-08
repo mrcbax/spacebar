@@ -51,7 +51,7 @@ pub fn lookup_spacebar(spacebar: String, db: &Database) -> Option<(Identifiers, 
     clean_bar.retain(|c| c.to_string() == ZERO || c.to_string() == ONE);
     for ident in &db.idents {
         for spc in &ident.spacebars {
-            if spc.spacebar == clean_bar {
+            if spc.spacebar.contains(clean_bar.as_str()) {
                 return Some((ident.clone(), spc.clone()));
             }
         }

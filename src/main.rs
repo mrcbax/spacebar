@@ -70,10 +70,10 @@ pub fn main() {
                 let mut desc = String::new();
                 io::stdin().read_line(&mut desc).unwrap();
                 desc = String::from(desc.trim());
-                for ident in &db.idents.clone() {
-                    if ident.user_name == user {
-                        &db.idents.push(generate_barcode_from_previous(ident.clone(), name, desc));
-                        &db.idents.dedup_by(|a, b| a.user_id.as_str().eq_ignore_ascii_case(b.user_id.as_str()) && a.spacebars.len() > b.spacebars.len());
+                for i in 0 .. db.idents.len() {
+                    if db.idents[i].user_name == user {
+                        let mut old_ident: Identifiers = db.idents.remove(i);
+                        &db.idents.push(generate_barcode_from_previous(old_ident, name, desc));
                         break;
                     }
                 }
