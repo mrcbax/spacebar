@@ -1,4 +1,4 @@
-Project Spacebar
+Project Spacebar [![](https://travis-ci.org/LogoiLab/spacebar.svg?branch=master)](https://travis-ci.org/LogoiLab/spacebar)
 ===
 An anti-plagiarism tool based null width characters.
 
