@@ -60,6 +60,7 @@ pub fn main() {
                 input = String::from(input.trim());
                 &db.idents.push(generate_barcode(input, new_user_id(), String::from("Default"), String::from("The default spacebar.")));
                 println!("New user created successfully.");
+                println!("------------");
             },
             "2" => {
                 println!("Name: ");
@@ -77,6 +78,7 @@ pub fn main() {
                         break;
                     }
                 }
+                println!("------------");
             },
             "3" => {
                 for ident in &db.idents {
@@ -103,6 +105,7 @@ pub fn main() {
                         println!("No spacebar found in line.");
                     },
                 };
+                println!("------------");
             },
             "5" => {
                 println!("Enter the path to the file: ");
@@ -127,6 +130,7 @@ pub fn main() {
                     };
                 }
                 sp.stop();
+                println!("------------");
             }
             "6" => {
                 sentinel = false;
