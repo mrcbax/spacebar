@@ -45,11 +45,12 @@ pub fn main() {
              .required(true)
              .takes_value(true))
         .get_matches();
-    let mut db: Database = read_database(String::from(matches.value_of("database").unwrap()));
+    let db_name: String = String::from(matches.value_of("database").unwrap());
+    let mut db: Database = read_database(&db_name);
     let user: String = String::from(matches.value_of("username").unwrap());
     let mut sentinel: bool = true;
     while sentinel {
-        match display_menu().as_str() {
+        match display_menu().trim() {
             "1" => {
                 println!("Input the new username: ");
                 let mut input = String::new();
@@ -129,8 +130,7 @@ pub fn main() {
             }
         };
     }
-
-    save_database(db, String::from(matches.value_of("database").unwrap()));
+    save_database(db, &db_name);
 }
 
 fn display_menu() -> String {

@@ -16,7 +16,7 @@ pub struct Database {
     pub idents: Vec<Identifiers>
 }
 
-pub fn read_database(path: String) -> Database {
+pub fn read_database(path: &String) -> Database {
     if Path::new(&path).exists() {
         let file = File::open(path).unwrap();
         let mut buf_reader = BufReader::new(file);
@@ -25,6 +25,7 @@ pub fn read_database(path: String) -> Database {
         let deserialized: Database = serde_json::from_str(&contents).unwrap();
         return deserialized;
     } else {
+        println!("Please input a new database name: ");
         let mut input = String::new();
         match io::stdin().read_line(&mut input) {
             Ok(_) => {
@@ -38,7 +39,7 @@ pub fn read_database(path: String) -> Database {
     }
 }
 
-pub fn save_database(db: Database, path: String) -> Database {
+pub fn save_database(db: Database, path: &String) -> Database {
     let serialized = serde_json::to_string(&db).unwrap();
     let mut file = File::create(path).unwrap();
     file.write_all(serialized.as_bytes()).unwrap();
