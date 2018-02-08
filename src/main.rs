@@ -1,3 +1,5 @@
+#![feature(string_retain)]
+
 #[macro_use]
 extern crate serde_derive;
 
@@ -90,7 +92,6 @@ pub fn main() {
                 println!("Paste a line of text you think has a spacebar: ");
                 let mut input = String::new();
                 io::stdin().read_line(&mut input).unwrap();
-                input = String::from(input.trim());
                 match lookup_spacebar(input, &db) {
                     Some(e) => {
                         println!("Spacebar found!");

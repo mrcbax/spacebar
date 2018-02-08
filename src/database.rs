@@ -47,12 +47,8 @@ pub fn save_database(db: Database, path: &String) -> Database {
 }
 
 pub fn lookup_spacebar(spacebar: String, db: &Database) -> Option<(Identifiers, Spacebar)> {
-    let mut clean_bar = String::new();
-    if spacebar.find(ZERO).unwrap_or_default() < spacebar.find(ONE).unwrap_or_default() {
-        clean_bar = spacebar.chars().skip(spacebar.find(ZERO).unwrap()).take(96).collect();
-    } else {
-        clean_bar = spacebar.chars().skip(spacebar.find(ONE).unwrap()).take(96).collect();
-    }
+    let mut clean_bar: String = String::from(spacebar.as_str());
+    clean_bar.retain(|c| c.to_string() == ZERO || c.to_string() == ONE);
     for ident in &db.idents {
         for spc in &ident.spacebars {
             if spc.spacebar == clean_bar {
