@@ -22,7 +22,8 @@ pub fn main() {
     let spacebarn: String = spacebar.name;
     let spacebard: String = spacebar.desc;
     let spacebars: String =  spacebar.spacebar;
-    println!("Data: user_id:'{}',spacebarn:{},spacebard:{},spacebar:\'{}\'", &ident.user_id, spacebarn, spacebard, &spacebars);
+    println!("Data: user_id:'{}', spacebarn:{}, spacebard:{}", &ident.user_id, spacebarn, spacebard);
     export_clipboard(spacebars);
+
 }
 
