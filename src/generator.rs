@@ -2,11 +2,12 @@ extern crate rand;
 
 use rand::Rng;
 
-static ZERO: &'static str = "\u{FEFF}";
-static ONE: &'static str = "\u{200B}";
+pub static ZERO: &'static str = "\u{FEFF}";
+pub static ONE: &'static str = "\u{200B}";
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Identifiers {
+    pub user_name: String,
     pub user_id: String,
     pub spacebars: Vec<Spacebar>
 }
@@ -27,7 +28,7 @@ pub fn new_user_id() -> String {
     String::from(format!("{}", bin_to_string(&u64_string)))
 }
 
-pub fn generate_barcode(user_id: String, name: String, desc: String) -> Identifiers {
+pub fn generate_barcode(user_name: String, user_id: String, name: String, desc: String) -> Identifiers {
     let mut rng = rand::thread_rng();
     let mut u32_string = String::new();
 
@@ -44,7 +45,7 @@ pub fn generate_barcode(user_id: String, name: String, desc: String) -> Identifi
     };
 
     let spacebars: Vec<Spacebar> = vec!(spacebar);
-    Identifiers{user_id: user_id, spacebars: spacebars}
+    Identifiers{user_name: user_name, user_id: user_id, spacebars: spacebars}
 }
 
 pub fn generate_barcode_from_previous (mut ident: Identifiers, name: String, desc: String) -> Identifiers {
@@ -76,16 +77,4 @@ fn bin_to_string (bin_rep: &String) -> String {
         }
     }
     bar_rep
-}
-pub fn string_to_bin (barcode_string: &String) -> String {
-    let mut bin_string = String::new();
-    for c in barcode_string.chars() {
-        if c.to_string() == ZERO {
-            bin_string += "0";
-        }
-        else {
-            bin_string += "1";
-        }
-    }
-    bin_string
 }
