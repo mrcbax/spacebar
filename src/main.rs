@@ -18,12 +18,12 @@ use std::io;
 use std::io::BufReader;
 use std::io::BufRead;
 use std::fs::File;
-use std::path::Path;
 
 use database::*;
 use generator::*;
 
 use clap::{App, Arg};
+use spinners::{Spinner, Spinners};
 
 pub fn main() {
     let matches = App::new("My Super Program")
@@ -47,13 +47,6 @@ pub fn main() {
         .get_matches();
     let mut db: Database = read_database(String::from(matches.value_of("database").unwrap()));
     let user: String = String::from(matches.value_of("username").unwrap());
-    //let mut ident: Identifiers = generate_barcode(String::from("TestUser"), new_user_id(), String::from("Test"), String::from("A description"));
-    //let spacebar: Spacebar = ident.spacebars.pop().unwrap();
-    //let spacebarn: String = spacebar.name;
-    //let spacebard: String = spacebar.desc;
-    //let spacebars: String =  spacebar.spacebar;
-    //println!("Data: user_id:'{}', spacebarn:{}, spacebard:{}", &ident.user_id, spacebarn, spacebard);
-    //export_clipboard(spacebars);
     let mut sentinel: bool = true;
     while sentinel {
         match display_menu().as_str() {
@@ -61,8 +54,8 @@ pub fn main() {
                 println!("Input the new username: ");
                 let mut input = String::new();
                 io::stdin().read_line(&mut input).unwrap();
-                db.idents.push(generate_barcode(input, new_user_id(), String::from("Default"), String::from("The default spacebar.")));
-                println!("New user {} created successfully.", input);
+                &db.idents.push(generate_barcode(input, new_user_id(), String::from("Default"), String::from("The default spacebar.")));
+                println!("New user created successfully.");
             },
             "2" => {
                 println!("Name: ");
@@ -71,18 +64,19 @@ pub fn main() {
                 println!("Short description: ");
                 let mut desc = String::new();
                 io::stdin().read_line(&mut desc).unwrap();
-                for ident in db.idents {
+                for ident in &db.idents.clone() {
                     if ident.user_name == user {
-                        db.idents.push(generate_barcode_from_previous(ident, name, desc));
-                        db.idents.dedup_by(|a, b| a.user_id.as_str().eq_ignore_ascii_case(b.user_id.as_str()) && a.spacebars.len() > b.spacebars.len());
+                        &db.idents.push(generate_barcode_from_previous(ident.clone(), name, desc));
+                        &db.idents.dedup_by(|a, b| a.user_id.as_str().eq_ignore_ascii_case(b.user_id.as_str()) && a.spacebars.len() > b.spacebars.len());
+                        break;
                     }
                 }
             },
             "3" => {
-                for ident in db.idents {
+                for ident in &db.idents {
                     if ident.user_name == user {
-                        for spc in ident.spacebars {
-                            println!("Name:\t{}\nDescription:\t{}\nSpacebar:\'{}\'", spc.name, spc.desc, spc.spacebar);
+                        for spc in &ident.spacebars {
+                            println!("Name:\t{}\nDescription:\t{}\nSpacebar:\'{}\'", &spc.name, &spc.desc, &spc.spacebar);
                             println!("------------");
                         }
                     }
@@ -92,7 +86,7 @@ pub fn main() {
                 println!("Paste a line of text you think has a spacebar: ");
                 let mut input = String::new();
                 io::stdin().read_line(&mut input).unwrap();
-                match lookup_spacebar(input, db) {
+                match lookup_spacebar(input, &db) {
                     Some(e) => {
                         println!("Spacebar found!");
                         println!("Username: {}", e.0.user_name);
@@ -108,11 +102,12 @@ pub fn main() {
                 println!("Enter the path to the file: ");
                 let mut input = String::new();
                 io::stdin().read_line(&mut input).unwrap();
-                let f = try!(File::open(input));
+                let f = File::open(input).expect("File not found.");
                 let mut file = BufReader::new(&f);
+                let sp = Spinner::new(Spinners::Dots9, "Searching...".into());
                 for line in file.lines() {
                     let l = line.unwrap();
-                    match lookup_spacebar(l, db) {
+                    match lookup_spacebar(l, &db) {
                         Some(e) => {
                             println!("Spacebar found!");
                             println!("Username: {}", e.0.user_name);
@@ -120,10 +115,11 @@ pub fn main() {
                             println!("Spacebar description: {}", e.1.desc);
                         },
                         None => {
-                            println!(".");
+                            print!("");
                         },
                     };
-                }           
+                }
+                sp.stop();
             }
             "6" => {
                 sentinel = false;
@@ -140,9 +136,9 @@ pub fn main() {
 fn display_menu() -> String {
     println!("1.\tNew user.");
     println!("2.\tNew spacebar.");
-    println!("3.\tDisplay your spacebars.")
+    println!("3.\tDisplay your spacebars.");
     println!("4.\tLookup unknown spacebar.");
-    println!("5.\tSearch file for spacebar.")
+    println!("5.\tSearch file for spacebar.");
     println!("6.\tQuit");
     println!("\nInput the number of your choice: ");
 

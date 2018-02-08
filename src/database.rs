@@ -45,20 +45,17 @@ pub fn save_database(db: Database, path: String) -> Database {
     db
 }
 
-pub fn lookup_spacebar(spacebar: String, db: Database) -> Option<(Identifiers, Spacebar)> {
+pub fn lookup_spacebar(spacebar: String, db: &Database) -> Option<(Identifiers, Spacebar)> {
     let mut clean_bar = String::new();
-    match if spacebar.find(ZERO).unwrap_or_default() < spacebar.find(ONE).unwrap_or_default() {
+    if spacebar.find(ZERO).unwrap_or_default() < spacebar.find(ONE).unwrap_or_default() {
         clean_bar = spacebar.chars().skip(spacebar.find(ZERO).unwrap()).take(96).collect();
     } else {
         clean_bar = spacebar.chars().skip(spacebar.find(ONE).unwrap()).take(96).collect();
-    } {
-        Ok(_) => println!("Spacebar found."),
-        Err(e) => return None,
-    };
-    for ident in db.idents {
-        for spc in ident.spacebars {
+    }
+    for ident in &db.idents {
+        for spc in &ident.spacebars {
             if spc.spacebar == clean_bar {
-                return Some((ident, spc));
+                return Some((ident.clone(), spc.clone()));
             }
         }
     }

@@ -5,14 +5,14 @@ use rand::Rng;
 pub static ZERO: &'static str = "\u{FEFF}";
 pub static ONE: &'static str = "\u{200B}";
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Identifiers {
     pub user_name: String,
     pub user_id: String,
     pub spacebars: Vec<Spacebar>
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Spacebar {
     pub name: String,
     pub desc: String,
