@@ -55,6 +55,7 @@ pub fn main() {
                 println!("Input the new username: ");
                 let mut input = String::new();
                 io::stdin().read_line(&mut input).unwrap();
+                input = String::from(input.trim());
                 &db.idents.push(generate_barcode(input, new_user_id(), String::from("Default"), String::from("The default spacebar.")));
                 println!("New user created successfully.");
             },
@@ -62,9 +63,11 @@ pub fn main() {
                 println!("Name: ");
                 let mut name = String::new();
                 io::stdin().read_line(&mut name).unwrap();
+                name = String::from(name.trim());
                 println!("Short description: ");
                 let mut desc = String::new();
                 io::stdin().read_line(&mut desc).unwrap();
+                desc = String::from(desc.trim());
                 for ident in &db.idents.clone() {
                     if ident.user_name == user {
                         &db.idents.push(generate_barcode_from_previous(ident.clone(), name, desc));
@@ -87,6 +90,7 @@ pub fn main() {
                 println!("Paste a line of text you think has a spacebar: ");
                 let mut input = String::new();
                 io::stdin().read_line(&mut input).unwrap();
+                input = String::from(input.trim());
                 match lookup_spacebar(input, &db) {
                     Some(e) => {
                         println!("Spacebar found!");
@@ -103,6 +107,7 @@ pub fn main() {
                 println!("Enter the path to the file: ");
                 let mut input = String::new();
                 io::stdin().read_line(&mut input).unwrap();
+                input = String::from(input.trim());
                 let f = File::open(input).expect("File not found.");
                 let mut file = BufReader::new(&f);
                 let sp = Spinner::new(Spinners::Dots9, "Searching...".into());
