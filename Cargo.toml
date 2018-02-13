@@ -4,7 +4,7 @@ version = "0.1.2"
 authors = ["Chad Baxter"]
 description = "An anti-plagiarism tool based on null width characters."
 repository = "https://www.github.com/LogoiLab/spacebar"
-repository = "LICENSE.md"
+license-file = "LICENSE.md"
 travis-ci = { repository = "LogoiLab/spacebar", branch = "master" }
 
 [dependencies]
