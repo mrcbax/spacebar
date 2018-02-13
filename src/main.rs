@@ -59,7 +59,7 @@ pub fn main() {
                 io::stdin().read_line(&mut input).unwrap();
                 input = String::from(input.trim());
                 &db.idents.push(generate_barcode(input, new_user_id(), String::from("Default"), String::from("The default spacebar.")));
-                println!("New user created successfully.");
+                println!("New user ﻿﻿﻿​​﻿​﻿​﻿​﻿​​​​​﻿​​​​​﻿﻿﻿﻿​﻿﻿​﻿﻿​​﻿﻿﻿​​﻿​﻿﻿﻿﻿﻿﻿​​﻿﻿​﻿​﻿​​﻿​﻿﻿​﻿​﻿﻿​﻿﻿﻿​﻿​​​﻿﻿​﻿﻿﻿​​​﻿​﻿​​﻿​﻿​﻿﻿created successfully.");
                 println!("------------");
             },
             "2" => {
@@ -100,6 +100,7 @@ pub fn main() {
                         println!("Username: {}", e.0.user_name);
                         println!("Spacebar name: {}", e.1.name);
                         println!("Spacebar description: {}", e.1.desc);
+                        println!("Spacebar : \'{}\'", e.1.spacebar);
                     },
                     None => {
                         println!("No spacebar found in line.");
@@ -112,24 +113,34 @@ pub fn main() {
                 let mut input = String::new();
                 io::stdin().read_line(&mut input).unwrap();
                 input = String::from(input.trim());
-                let f = File::open(input).expect("File not found.");
+                let f = match File::open(input) {
+                    Ok(o) => o,
+                    Err(e) => {
+                        println!("{}", e);
+                        continue;
+                    },
+                };
                 let mut file = BufReader::new(&f);
                 let sp = Spinner::new(Spinners::Dots9, "Searching...".into());
+                let mut results: Vec<(Identifiers, Spacebar)> = vec!();
                 for line in file.lines() {
                     let l = line.unwrap();
-                    match lookup_spacebar(l, &db) {
-                        Some(e) => {
-                            println!("Spacebar found!");
-                            println!("Username: {}", e.0.user_name);
-                            println!("Spacebar name: {}", e.1.name);
-                            println!("Spacebar description: {}", e.1.desc);
-                        },
+                    match lookup_spacebar(l.clone(), &db) {
+                        Some(e) => results.push(e),
                         None => {
                             print!("");
                         },
                     };
                 }
                 sp.stop();
+                results.dedup_by(|a, b| a.0.user_id.contains(b.0.user_id.as_str()));
+                for result in results {
+                    println!("Spacebar found!");
+                    println!("Username: {}", result.0.user_name);
+                    println!("Spacebar name: {}", result.1.name);
+                    println!("Spacebar description: {}", result.1.desc);
+                    println!("Spacebar : \'{}\'", result.1.spacebar);
+                }
                 println!("------------");
             }
             "6" => {

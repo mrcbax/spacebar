@@ -27,6 +27,7 @@ pub fn read_database(path: &String) -> Database {
     } else {
         println!("Please input a new database name: ");
         let mut input = String::new();
+        input = String::from(input.trim());
         match io::stdin().read_line(&mut input) {
             Ok(_) => {
                 save_database(Database{name: input, idents: vec!()}, path)
@@ -40,7 +41,7 @@ pub fn read_database(path: &String) -> Database {
 }
 
 pub fn save_database(db: Database, path: &String) -> Database {
-    let serialized = serde_json::to_string(&db).unwrap();
+    let serialized = serde_json::to_string_pretty(&db).unwrap();
     let mut file = File::create(path).unwrap();
     file.write_all(serialized.as_bytes()).unwrap();
     db
