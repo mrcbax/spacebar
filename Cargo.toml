@@ -2,6 +2,10 @@
 name = "spacebar"
 version = "0.1.2"
 authors = ["Chad Baxter"]
+description = "An anti-plagiarism tool based on null width characters."
+repository = "https://www.github.com/LogoiLab/spacebar"
+repository = "LICENSE.md"
+travis-ci = { repository = "LogoiLab/spacebar", branch = "master" }
 
 [dependencies]
 clap = "2.29.4"
@@ -11,3 +15,12 @@ serde = "1.0.27"
 serde_derive = "1.0.27"
 serde_json = "1.0.9"
 spinners = "1.0.0"
+
+[profile.release]
+opt-level = 3
+debug = false
+rpath = false
+lto = true
+debug-assertions = false
+codegen-units = 1
+panic = 'unwind'
