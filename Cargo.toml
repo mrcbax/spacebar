@@ -6,6 +6,7 @@ description = "An anti-plagiarism tool based on null width characters."
 repository = "https://www.github.com/LogoiLab/spacebar"
 license-file = "LICENSE.md"
 travis-ci = { repository = "LogoiLab/spacebar", branch = "master" }
+publish = true
 
 [dependencies]
 clap = "2.29.4"
