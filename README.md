@@ -9,3 +9,4 @@ If you find text or code later that you think is copied simply run the file thro
 This software is in an early development stage and has the current issues:
 - Database does not dedup. Sorry.
 - Files that are one line(such as minified json) may fail to find spacebars if there are multiple spacebars.
+- On the creation of the default spacebar debug characters are printed.
