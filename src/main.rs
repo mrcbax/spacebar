@@ -28,7 +28,7 @@ use clap::{App, Arg};
 use spinners::{Spinner, Spinners};
 
 pub fn main() {
-    let matches = App::new("My Super Program")
+    let matches = App::new("Spacebar Tagging System")
         .version(crate_version!())
         .author(crate_authors!())
         .about(crate_description!())
