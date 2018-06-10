@@ -9,12 +9,12 @@ travis-ci = { repository = "LogoiLab/spacebar", branch = "master" }
 publish = true
 
 [dependencies]
-clap = "2.29.4"
-clipboard = "0.4.2"
-rand = "0.4.2"
-serde = "1.0.27"
-serde_derive = "1.0.27"
-serde_json = "1.0.9"
+clap = "2.31.2"
+clipboard = "0.4.6"
+rand = "0.5.1"
+serde = "1.0.66"
+serde_derive = "1.0.66"
+serde_json = "1.0.20"
 spinners = "1.0.0"
 
 [profile.release]
