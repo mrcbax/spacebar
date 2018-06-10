@@ -49,11 +49,16 @@ pub fn save_database(db: Database, path: &String) -> Database {
 
 pub fn lookup_spacebar(spacebar: String, db: &Database) -> Option<(Identifiers, Spacebar)> {
     let mut clean_bar: String = String::from(spacebar.as_str());
-    clean_bar.retain(|c| c.to_string() == ZERO || c.to_string() == ONE);
-    for ident in &db.idents {
-        for spc in &ident.spacebars {
-            if spc.spacebar.contains(clean_bar.as_str()) {
-                return Some((ident.clone(), spc.clone()));
+    if clean_bar.contains(ZERO) || clean_bar.contains(ONE) {
+        clean_bar.retain(|c| c.to_string() == ZERO || c.to_string() == ONE);
+        if clean_bar.len() > 96 {
+            clean_bar = clean_bar.chars().take(96).collect();
+        }
+        for ident in &db.idents {
+            for spc in &ident.spacebars {
+                if spc.spacebar.contains(clean_bar.as_str()) {
+                    return Some((ident.clone(), spc.clone()));
+                }
             }
         }
     }
