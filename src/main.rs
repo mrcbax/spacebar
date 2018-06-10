@@ -150,7 +150,7 @@ pub fn main() {
                     };
                 }
                 sp.stop();
-                results.dedup_by(|a, b| a.0.user_id.contains(b.0.user_id.as_str()));
+                results.dedup_by(|a, b| a.0.user_id.eq(b.0.user_id.as_str()));
                 for result in results {
                     println!("Spacebar found!");
                     println!("Username: {}", result.0.user_name);
