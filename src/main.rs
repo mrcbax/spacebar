@@ -50,6 +50,23 @@ pub fn main() {
     let db_name: String = String::from(matches.value_of("database").unwrap());
     let mut db: Database = read_database(&db_name);
     let user: String = String::from(matches.value_of("username").unwrap());
+    if !find_user_name(&user, &db) {
+        println!("User provided in arguments does not exist. Create? [y,N]");
+        let mut input = String::new();
+        io::stdin().read_line(&mut input).unwrap();
+        input = String::from(input.trim());
+        match input.to_lowercase().as_str() {
+            "y" => {
+                &db.idents.push(generate_barcode(user.clone(), new_user_id(), String::from("Default"), String::from("The default spacebar.")));
+                println!("New user {} created successfully.", input);
+                println!("------------");
+            },
+            "n" => {
+                panic!("Exiting...")
+            },
+            _ => panic!("Invalid input. Please re-launch and try again."),
+        }
+    }
     let mut sentinel: bool = true;
     while sentinel {
         match display_menu().trim() {
@@ -58,8 +75,8 @@ pub fn main() {
                 let mut input = String::new();
                 io::stdin().read_line(&mut input).unwrap();
                 input = String::from(input.trim());
-                &db.idents.push(generate_barcode(input, new_user_id(), String::from("Default"), String::from("The default spacebar.")));
-                println!("New user ﻿﻿﻿​​﻿​﻿​﻿​﻿​​​​​﻿​​​​​﻿﻿﻿﻿​﻿﻿​﻿﻿​​﻿﻿﻿​​﻿​﻿﻿﻿﻿﻿﻿​​﻿﻿​﻿​﻿​​﻿​﻿﻿​﻿​﻿﻿​﻿﻿﻿​﻿​​​﻿﻿​﻿﻿﻿​​​﻿​﻿​​﻿​﻿​﻿﻿created successfully.");
+                &db.idents.push(generate_barcode(input.clone(), new_user_id(), String::from("Default"), String::from("The default spacebar.")));
+                println!("New user {} created successfully.", input);
                 println!("------------");
             },
             "2" => {

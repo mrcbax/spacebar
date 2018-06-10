@@ -59,3 +59,12 @@ pub fn lookup_spacebar(spacebar: String, db: &Database) -> Option<(Identifiers, 
     }
     return None;
 }
+
+pub fn find_user_name(user_name: &String, db: &Database) -> bool {
+    for ident in &db.idents {
+        if ident.user_name.eq(user_name.as_str()) {
+            return true;
+        }
+    }
+    return false;
+}
