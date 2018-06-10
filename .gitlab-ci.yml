@@ -1,6 +1,6 @@
 # Unofficial language image. Look for the different tagged releases at:
 # https://hub.docker.com/r/scorpil/rust/tags/
-image: "rust:nightly"
+image: "rustlang/rust:nightly-slim"
 
 # Optional: Pick zero or more services to be used on all builds.
 # Only needed when using a docker container to run your tests in.
