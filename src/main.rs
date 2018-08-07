@@ -139,15 +139,16 @@ pub fn main() {
                 };
                 let mut file = BufReader::new(&f);
                 let sp = Spinner::new(Spinners::Dots9, "Searching...".into());
-                let mut results: Vec<(Identifiers, Spacebar)> = vec!();
+                let mut results: Vec<(Identifiers, Spacebar, String)> = vec!();
                 for line in file.lines() {
-                    let l = line.unwrap();
-                    match lookup_spacebar(l.clone(), &db) {
-                        Some(e) => results.push(e),
-                        None => {
-                            print!("");
+                    match line {
+                        Ok(e) =>  match lookup_spacebar(e.clone(), &db) {
+                            Some(o) => results.push((o.0,o.1,e.clone())),
+                            None => {},
                         },
+                        Err(_) => {},
                     };
+
                 }
                 sp.stop();
                 results.dedup_by(|a, b| a.0.user_id.eq(b.0.user_id.as_str()));
@@ -156,7 +157,8 @@ pub fn main() {
                     println!("Username: {}", result.0.user_name);
                     println!("Spacebar name: {}", result.1.name);
                     println!("Spacebar description: {}", result.1.desc);
-                    println!("Spacebar : \'{}\'", result.1.spacebar);
+                    println!("Spacebar: \'{}\'", result.1.spacebar);
+                    println!("Found in line: {}", result.2);
                 }
                 println!("------------");
             }
@@ -191,4 +193,3 @@ fn display_menu() -> String {
         },
     }
 }
-
