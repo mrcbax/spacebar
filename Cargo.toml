@@ -1,6 +1,6 @@
 [package]
 name = "spacebar"
-version = "0.1.5"
+version = "0.1.6"
 authors = ["Chad Baxter"]
 description = "An anti-plagiarism tool based on null width characters."
 repository = "https://www.github.com/LogoiLab/spacebar"
