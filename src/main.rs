@@ -101,7 +101,7 @@ pub fn main() {
                 for ident in &db.idents {
                     if ident.user_name == user {
                         for spc in &ident.spacebars {
-                            println!("Name:\t{}\nDescription:\t{}\nSpacebar:\'{}\'", &spc.name, &spc.desc, &spc.spacebar);
+                            println!("Name:\t{}\nDescription:\t{}\nSpacebar:\t-->{}<--", &spc.name, &spc.desc, &spc.spacebar);
                             println!("------------");
                         }
                     }
@@ -117,7 +117,7 @@ pub fn main() {
                         println!("Username: {}", e.0.user_name);
                         println!("Spacebar name: {}", e.1.name);
                         println!("Spacebar description: {}", e.1.desc);
-                        println!("Spacebar : \'{}\'", e.1.spacebar);
+                        println!("Spacebar : -->{}<--", e.1.spacebar);
                     },
                     None => {
                         println!("No spacebar found in line.");
@@ -151,13 +151,13 @@ pub fn main() {
 
                 }
                 sp.stop();
-                results.dedup_by(|a, b| a.0.user_id.eq(b.0.user_id.as_str()));
+                results.dedup_by(|a, b| a.1.spacebar.eq(b.1.spacebar.as_str()));
                 for result in results {
                     println!("Spacebar found!");
                     println!("Username: {}", result.0.user_name);
                     println!("Spacebar name: {}", result.1.name);
                     println!("Spacebar description: {}", result.1.desc);
-                    println!("Spacebar: \'{}\'", result.1.spacebar);
+                    println!("Spacebar: -->{}<--", result.1.spacebar);
                     println!("Found in line: {}", result.2);
                 }
                 println!("------------");
