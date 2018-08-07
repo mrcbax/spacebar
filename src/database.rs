@@ -27,13 +27,14 @@ pub fn read_database(path: &String) -> Database {
     } else {
         println!("Please input a new database name: ");
         let mut input = String::new();
-        input = String::from(input.trim());
         match io::stdin().read_line(&mut input) {
             Ok(_) => {
+                input = String::from(input.trim());
                 save_database(Database{name: input, idents: vec!()}, path)
             }
-            Err(error) => {
-                println!("error: {}", error);
+            Err(e) => {
+                input = String::from(input.trim());
+                println!("error: {}", e);
                 Database{name: input, idents: vec!()}
             },
         }
