@@ -164,7 +164,7 @@ pub fn main() {
                 println!("------------");
             }
             "6" => {
-                match lookup_spacebar(board::parse_clipboard(), &db) {
+                match lookup_spacebar(parse_clipboard(), &db) {
                     Some(e) => {
                         println!("Spacebar found!");
                         println!("Username: {}", e.0.user_name);
