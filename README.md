@@ -7,6 +7,7 @@ Create a tag give it a name and description. It gets added to your clipboard. Pa
 If you find text or code later that you think is copied simply run the file through Project Spacebar and it will check your database to see if there is a spacebar associated with you.
 
 This software is in an early development stage and has the current issues. (Those marked with a check may or may not have been fixed.):
-- [ ] Database may not de-duplicate properly.
+- [X] Database may not de-duplicate properly.
 - [x] Files that are one line(such as minified json) may fail to find spacebars if there are multiple spacebars.
 - [x] On the creation of the default spacebar debug characters are printed.
+- [ ] Calling unwrap somwhere when reading a file (option 5) causes a handled panic. It looks ugly but it doesn't break anything.
