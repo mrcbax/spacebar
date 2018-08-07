@@ -288,7 +288,7 @@ dependencies = [
 
 [[package]]
 name = "spacebar"
-version = "0.1.4"
+version = "0.1.5"
 dependencies = [
  "clap 2.31.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "clipboard 0.4.6 (registry+https://github.com/rust-lang/crates.io-index)",

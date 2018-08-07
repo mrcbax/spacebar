@@ -21,6 +21,7 @@ use std::io::BufReader;
 use std::io::BufRead;
 use std::fs::File;
 
+use board::*;
 use database::*;
 use generator::*;
 
@@ -117,7 +118,7 @@ pub fn main() {
                         println!("Username: {}", e.0.user_name);
                         println!("Spacebar name: {}", e.1.name);
                         println!("Spacebar description: {}", e.1.desc);
-                        println!("Spacebar : -->{}<--", e.1.spacebar);
+                        println!("Spacebar: -->{}<--", e.1.spacebar);
                     },
                     None => {
                         println!("No spacebar found in line.");
@@ -163,6 +164,21 @@ pub fn main() {
                 println!("------------");
             }
             "6" => {
+                match lookup_spacebar(board::parse_clipboard(), &db) {
+                    Some(e) => {
+                        println!("Spacebar found!");
+                        println!("Username: {}", e.0.user_name);
+                        println!("Spacebar name: {}", e.1.name);
+                        println!("Spacebar description: {}", e.1.desc);
+                        println!("Spacebar: -->{}<--", e.1.spacebar);
+                    },
+                    None => {
+                        println!("No spacebar found in clipboard.");
+                    },
+                };
+                println!("------------");
+            }
+            "7" => {
                 sentinel = false;
             },
             _ => {
@@ -178,8 +194,9 @@ fn display_menu() -> String {
     println!("2.\tNew spacebar.");
     println!("3.\tDisplay your spacebars.");
     println!("4.\tLookup unknown spacebar.");
-    println!("5.\tSearch file for spacebar.");
-    println!("6.\tQuit");
+    println!("5.\tSearch file for spacebars.");
+    println!("6.\tSearch clipboard for spacebars.");
+    println!("7.\tQuit");
     println!("\nInput the number of your choice: ");
 
     let mut input = String::new();

@@ -16,7 +16,14 @@ fn pause() {
 }
 
 pub fn parse_clipboard() -> String {
-    unimplemented!();
+    let mut ctx: ClipboardContext = ClipboardProvider::new().unwrap();
+    match ctx.get_contents() {
+        Ok(o) => o,
+        Err(_) => {
+            println!("Failed to read clipboard.");
+            String::from("")
+        }
+    }
 }
 
 pub fn export_clipboard(spacebar: String) {
