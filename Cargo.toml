@@ -11,6 +11,7 @@ publish = true
 [dependencies]
 clap = "2.31.2"
 clipboard = "0.4.6"
+curl = "0.4.14"
 rand = "0.5.1"
 serde = "1.0.66"
 serde_derive = "1.0.66"

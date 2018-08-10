@@ -15,6 +15,7 @@ extern crate spinners;
 pub mod board;
 pub mod database;
 pub mod generator;
+pub mod scrape;
 
 use std::io;
 use std::io::BufReader;
@@ -24,6 +25,7 @@ use std::fs::File;
 use board::*;
 use database::*;
 use generator::*;
+use scrape::*;
 
 use clap::{App, Arg};
 use spinners::{Spinner, Spinners};
@@ -179,6 +181,24 @@ pub fn main() {
                 println!("------------");
             }
             "7" => {
+                println!("Enter the full URL to the web page: ");
+                let mut input = String::new();
+                io::stdin().read_line(&mut input).unwrap();
+                match lookup_spacebar(scrape_url(input.trim()), &db) {
+                    Some(e) => {
+                        println!("Spacebar found!");
+                        println!("Username: {}", e.0.user_name);
+                        println!("Spacebar name: {}", e.1.name);
+                        println!("Spacebar description: {}", e.1.desc);
+                        println!("Spacebar: -->{}<--", e.1.spacebar);
+                    },
+                    None => {
+                        println!("No spacebar found on web page.");
+                    },
+                };
+                println!("------------");
+            }
+            "8" => {
                 sentinel = false;
             },
             _ => {
@@ -196,7 +216,8 @@ fn display_menu() -> String {
     println!("4.\tLookup unknown spacebar.");
     println!("5.\tSearch file for spacebars.");
     println!("6.\tSearch clipboard for spacebars.");
-    println!("7.\tQuit");
+    println!("7.\tCheck a web page.");
+    println!("8.\tQuit");
     println!("\nInput the number of your choice: ");
 
     let mut input = String::new();

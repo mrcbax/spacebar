@@ -49,15 +49,20 @@ pub fn save_database(db: Database, path: &String) -> Database {
 }
 
 pub fn lookup_spacebar(spacebar: String, db: &Database) -> Option<(Identifiers, Spacebar)> {
-    let mut clean_bar: String = String::from(spacebar.as_str());
+    let mut clean_bar: String = spacebar.clone().replace("\n", "");
     if clean_bar.contains(ZERO) || clean_bar.contains(ONE) {
         clean_bar.retain(|c| c.to_string() == ZERO || c.to_string() == ONE);
         if clean_bar.len() > 96 {
             clean_bar = clean_bar.chars().take(96).collect();
         }
+        if clean_bar.len() < 96 {
+            println!("This is a malformed spacebar: -->{}<--", clean_bar);
+            return None;
+        }
         for ident in &db.idents {
             for spc in &ident.spacebars {
                 if spc.spacebar.contains(clean_bar.as_str()) {
+                    println!("third if");
                     return Some((ident.clone(), spc.clone()));
                 }
             }
