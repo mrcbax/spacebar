@@ -11,3 +11,4 @@ This software is in an early development stage and has the current issues. (Thos
 - [x] Files that are one line(such as minified json) may fail to find spacebars if there are multiple spacebars.
 - [x] On the creation of the default spacebar debug characters are printed.
 - [ ] Calling unwrap somwhere when reading a file (option 5) causes a handled panic. It looks ugly but it doesn't break anything.
+- [ ] Redirects aren't handled properly in the scraper. same HTTP errors. They are not ignored and are parsed as if they were the web page you wanted.
