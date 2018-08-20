@@ -8,12 +8,15 @@ pub fn scrape_url(url: &str) -> String {
     easy.url(url).unwrap();
 
     {
-        let mut transfer = easy.transfer();
-        transfer.write_function(|data| {
+        easy.transfer().write_function(|data| {
             dst.extend_from_slice(data);
             Ok(data.len())
         }).unwrap();
-        transfer.perform().unwrap();
+        match easy.follow_location(true) {
+            Ok(_) => (),
+            Err(_) => println!("Failed to follow a redirect. A spacebar may not be found."),
+        };
+        easy.transfer().perform().unwrap();
     }
     if easy.response_code().unwrap() != 200 {
         println!("Server response was not as expected. A spacebar may not be found even if there is one. Response code: {}", easy.response_code().unwrap());
