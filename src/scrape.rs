@@ -15,8 +15,11 @@ pub fn scrape_url(url: &str) -> String {
         }).unwrap();
         transfer.perform().unwrap();
     }
-     match String::from_utf8(dst) {
-         Ok(o) => o,
+    if easy.response_code().unwrap() != 200 {
+        println!("Server response was not as expected. A spacebar may not be found even if there is one. Response code: {}", easy.response_code().unwrap());
+    }
+    match String::from_utf8(dst) {
+        Ok(o) => o,
         Err(_) => {
             println!("Failed to parse web page.");
             String::from("")
