@@ -6,6 +6,8 @@ use std::io::BufReader;
 use std::io::prelude::*;
 use std::path::Path;
 
+use log::{info,error};
+
 use generator::ZERO;
 use generator::ONE;
 use generator::*;
@@ -25,7 +27,7 @@ pub fn read_database(path: &String) -> Database {
         let deserialized: Database = serde_json::from_str(&contents).unwrap();
         return deserialized;
     } else {
-        println!("Please input a new database name: ");
+        info!("Please input a new database name: ");
         let mut input = String::new();
         match io::stdin().read_line(&mut input) {
             Ok(_) => {
@@ -34,7 +36,7 @@ pub fn read_database(path: &String) -> Database {
             }
             Err(e) => {
                 input = String::from(input.trim());
-                println!("error: {}", e);
+                error!("error: {}", e);
                 Database{name: input, idents: vec!()}
             },
         }
@@ -56,7 +58,7 @@ pub fn lookup_spacebar(spacebar: String, db: &Database) -> Option<(Identifiers, 
             clean_bar = clean_bar.chars().take(96).collect();
         }
         if clean_bar.len() < 96 {
-            println!("This is a malformed spacebar: -->{}<--", clean_bar);
+            info!("This is a malformed spacebar: -->{}<--", clean_bar);
             return None;
         }
         for ident in &db.idents {
