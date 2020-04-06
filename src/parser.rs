@@ -3,7 +3,6 @@ use super::generator::*;
 use log::*;
 
 pub fn locate_spacebar(body: String) -> Option<i64> {
-    let mut subbody = body.clone();
     if body.contains(ZERO) || body.contains(ONE) {
         let ptr_start_zero = body.find(ZERO);
         let ptr_start_one = body.find(ONE);
@@ -44,7 +43,7 @@ pub fn locate_spacebar(body: String) -> Option<i64> {
             return None;
         }
 
-        return Some(string_to_bin(String::from(body.split_at(start).1.split_at(end).0)));
+        return Some(string_to_bin(String::from(body.split_at(start).1.split_at(start + 64).0)));
     } else {
         return None;
     }
