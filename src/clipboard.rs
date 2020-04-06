@@ -1,10 +1,9 @@
-use clipboard::ClipboardProvider;
-use clipboard::ClipboardContext;
+use copypasta::{ClipboardContext, ClipboardProvider};
 
 use std::io;
 use std::io::prelude::*;
 
-use log::{info,error};
+use log::*;
 
 fn pause() {
     let mut stdin = io::stdin();
@@ -17,25 +16,25 @@ fn pause() {
     clear_clipboard();
 }
 
-pub fn parse_clipboard() -> String {
-    let mut ctx: ClipboardContext = ClipboardProvider::new().unwrap();
+pub fn parse_clipboard() -> Option<String> {
+    let mut ctx = ClipboardContext::new().unwrap();
     match ctx.get_contents() {
-        Ok(o) => o,
+        Ok(o) => return Some(o),
         Err(_) => {
             error!("Failed to read clipboard.");
-            String::from("")
+            return None;
         }
     }
 }
 
 pub fn export_clipboard(spacebar: String) {
-    let mut ctx: ClipboardContext = ClipboardProvider::new().unwrap();
+    let mut ctx = ClipboardContext::new().unwrap();
     ctx.set_contents(spacebar).unwrap();
     info!("Spacebar copied to clipboard.");
     pause();
 }
 
 pub fn clear_clipboard() {
-    let mut ctx: ClipboardContext = ClipboardProvider::new().unwrap();
+    let mut ctx = ClipboardContext::new().unwrap();
     ctx.set_contents(String::new()).unwrap();
 }

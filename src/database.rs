@@ -1,82 +1,49 @@
-extern crate serde_json;
+use super::generator::Spacebar;
 
-use std::fs::File;
-use std::io;
-use std::io::BufReader;
-use std::io::prelude::*;
-use std::path::Path;
+use log::*;
+use rusqlite::{params, NO_PARAMS, Connection};
 
-use log::{info,error};
-
-use generator::ZERO;
-use generator::ONE;
-use generator::*;
-
-#[derive(Serialize, Deserialize, Debug)]
-pub struct Database {
-    pub name: String,
-    pub idents: Vec<Identifiers>
-}
-
-pub fn read_database(path: &String) -> Database {
-    if Path::new(&path).exists() {
-        let file = File::open(path).unwrap();
-        let mut buf_reader = BufReader::new(file);
-        let mut contents = String::new();
-        buf_reader.read_to_string(&mut contents).unwrap();
-        let deserialized: Database = serde_json::from_str(&contents).unwrap();
-        return deserialized;
-    } else {
-        info!("Please input a new database name: ");
-        let mut input = String::new();
-        match io::stdin().read_line(&mut input) {
-            Ok(_) => {
-                input = String::from(input.trim());
-                save_database(Database{name: input, idents: vec!()}, path)
+fn ensure_integrity(conn: &Connection) {
+    let mut statement = conn.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='spacebars'").unwrap();
+    let _ = match statement.query(NO_PARAMS) {
+        Ok(mut o) => {
+            if o.next().unwrap().is_none() {
+                conn.execute("CREATE TABLE spacebars (id SERIAL PRIMARY KEY, spacebar INTEGER, name TEXT NOT NULL, description TEXT)", NO_PARAMS).unwrap();
             }
-            Err(e) => {
-                input = String::from(input.trim());
-                error!("error: {}", e);
-                Database{name: input, idents: vec!()}
-            },
+        },
+        Err(_) => {
+            error!("Database integrity check failed.");
+            std::process::exit(1);
         }
-    }
+    };
 }
 
-pub fn save_database(db: Database, path: &String) -> Database {
-    let serialized = serde_json::to_string_pretty(&db).unwrap();
-    let mut file = File::create(path).unwrap();
-    file.write_all(serialized.as_bytes()).unwrap();
-    db
-}
-
-pub fn lookup_spacebar(spacebar: String, db: &Database) -> Option<(Identifiers, Spacebar)> {
-    let mut clean_bar: String = spacebar.clone().replace("\n", "");
-    if clean_bar.contains(ZERO) || clean_bar.contains(ONE) {
-        clean_bar.retain(|c| c.to_string() == ZERO || c.to_string() == ONE);
-        if clean_bar.len() > 96 {
-            clean_bar = clean_bar.chars().take(96).collect();
-        }
-        if clean_bar.len() < 96 {
-            info!("This is a malformed spacebar: -->{}<--", clean_bar);
+pub fn connect(path: &str) -> Option<Connection> {
+    match Connection::open(path) {
+        Ok(o) =>  {
+            ensure_integrity(&o);
+            return Some(o);
+        },
+        Err(_) => {
+            error!("Failed to connect to database: {}", path);
             return None;
-        }
-        for ident in &db.idents {
-            for spc in &ident.spacebars {
-                if spc.spacebar.contains(clean_bar.as_str()) {
-                    return Some((ident.clone(), spc.clone()));
-                }
-            }
-        }
-    }
-    return None;
+        },
+    };
 }
 
-pub fn find_user_name(user_name: &String, db: &Database) -> bool {
-    for ident in &db.idents {
-        if ident.user_name.eq(user_name.as_str()) {
-            return true;
-        }
-    }
-    return false;
+pub fn insert_spacebar(conn: &Connection, spacebar: Spacebar) {
+    conn.execute("INSERT INTO spacebars (spacebar, name, description) VALUES ($1, $2, $3)", params![spacebar.spacebar, spacebar.name, spacebar.description]).unwrap();
+}
+
+pub fn update_spacebar(conn: &Connection, spacebar: Spacebar) {
+    unimplemented!();
+}
+
+pub fn delete_spacebar(conn: &Connection, spacebar: Spacebar) {
+    unimplemented!();
+}
+
+pub fn select_spacebar(conn: &Connection, spacebar: Spacebar) {
+    //SELECT * FROM spacebars WHERE spacebar = $1
+    unimplemented!();
 }
