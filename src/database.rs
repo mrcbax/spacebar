@@ -1,7 +1,7 @@
 use super::generator::Spacebar;
 
 use log::*;
-use rusqlite::{params, NO_PARAMS, Connection};
+use rusqlite::{params, NO_PARAMS, Connection, OpenFlags};
 
 fn ensure_integrity(conn: &Connection) {
     let mut statement = conn.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='spacebars'").unwrap();
@@ -11,28 +11,34 @@ fn ensure_integrity(conn: &Connection) {
                 conn.execute("CREATE TABLE spacebars (id SERIAL PRIMARY KEY, spacebar INTEGER, name TEXT NOT NULL, description TEXT)", NO_PARAMS).unwrap();
             }
         },
-        Err(_) => {
+        Err(e) => {
             error!("Database integrity check failed.");
+            debug!("{}", e);
             std::process::exit(1);
         }
     };
 }
 
 pub fn connect(path: &str) -> Option<Connection> {
-    match Connection::open(path) {
+    match Connection::open_with_flags(path, OpenFlags::SQLITE_OPEN_READ_WRITE | OpenFlags::SQLITE_OPEN_CREATE) {
         Ok(o) =>  {
             ensure_integrity(&o);
             return Some(o);
         },
-        Err(_) => {
-            error!("Failed to connect to database: {}", path);
+        Err(e) => {
+            error!("Could not find database. Try running init.");
+            debug!("{}", e);
             return None;
         },
     };
 }
 
 pub fn insert_spacebar(conn: &Connection, spacebar: Spacebar) {
-    conn.execute("INSERT INTO spacebars (spacebar, name, description) VALUES ($1, $2, $3)", params![spacebar.spacebar, spacebar.name, spacebar.description]).unwrap();
+    if spacebar.description.is_some() {
+        conn.execute("INSERT INTO spacebars (spacebar, name, description) VALUES ($1, $2, $3)", params![spacebar.spacebar, spacebar.name, spacebar.description.unwrap()]).unwrap();
+    } else {
+        conn.execute("INSERT INTO spacebars (spacebar, name) VALUES ($1, $2)", params![spacebar.spacebar, spacebar.name]).unwrap();
+    }
 }
 
 pub fn update_spacebar(conn: &Connection, spacebar: Spacebar) {
@@ -42,7 +48,10 @@ pub fn update_spacebar(conn: &Connection, spacebar: Spacebar) {
 pub fn delete_spacebar(conn: &Connection, spacebar: Spacebar) {
     match conn.execute("DELETE FROM spacebars WHERE spacebar = $1", params![spacebar.spacebar]) {
         Ok(o) => info!("Deleted {} spacebar(s)", o),
-        Err(_) => error!("Failed to delete spacebar."),
+        Err(e) => {
+            error!("Failed to delete spacebar.");
+            debug!("{}", e);
+        },
     }
 }
 
@@ -53,19 +62,23 @@ pub fn select_spacebar(conn: &Connection, spacebar: Spacebar) -> Option<Spacebar
         Ok(Spacebar {
             spacebar: row.get(1).unwrap(),
             name: row.get(2).unwrap(),
-            description: row.get(3).unwrap(),
+            description: Some(row.get(3).unwrap()),
         })
     }) {
             Ok(o) => o,
-            Err(_) => {
+            Err(e) => {
                 error!("Failed to parse database response.");
+                debug!("{}", e);
                 std::process::exit(1);
             },
         };
     if spacebars_iter.next().is_some() {
-        return match spacebars_iter.next().unwrap() {
-            Ok(o) => Some(o),
-            Err(_) => None,
+        match spacebars_iter.next().unwrap() {
+            Ok(o) => return Some(o),
+            Err(e) => {
+                debug!("{}", e);
+                return None;
+            },
         }
     } else {
         return None;
