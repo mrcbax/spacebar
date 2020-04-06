@@ -29,7 +29,7 @@ pub fn generate_spacebar(name: String, desc: String) -> Spacebar {
     return spacebar;
 }
 
-fn bin_to_string (num_rep: u64) -> String {
+fn bin_to_string (num_rep: i64) -> String {
     let bin_rep = String::from(format!("{:b}", num_rep));
     let mut bar_rep = String::new();
     for c in bin_rep.chars() {

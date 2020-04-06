@@ -40,10 +40,34 @@ pub fn update_spacebar(conn: &Connection, spacebar: Spacebar) {
 }
 
 pub fn delete_spacebar(conn: &Connection, spacebar: Spacebar) {
-    unimplemented!();
+    match conn.execute("DELETE FROM spacebars WHERE spacebar = $1", params![spacebar.spacebar]) {
+        Ok(o) => info!("Deleted {} spacebar(s)", o),
+        Err(_) => error!("Failed to delete spacebar."),
+    }
 }
 
-pub fn select_spacebar(conn: &Connection, spacebar: Spacebar) {
+pub fn select_spacebar(conn: &Connection, spacebar: Spacebar) -> Option<Spacebar> {
     //SELECT * FROM spacebars WHERE spacebar = $1
-    unimplemented!();
+    let mut statement = conn.prepare("SELECT * FROM spacebars WHERE spacebar=$1").unwrap();
+    let mut spacebars_iter = match statement.query_map(params![spacebar.spacebar], |row| {
+        Ok(Spacebar {
+            spacebar: row.get(1).unwrap(),
+            name: row.get(2).unwrap(),
+            description: row.get(3).unwrap(),
+        })
+    }) {
+            Ok(o) => o,
+            Err(_) => {
+                error!("Failed to parse database response.");
+                std::process::exit(1);
+            },
+        };
+    if spacebars_iter.next().is_some() {
+        return match spacebars_iter.next().unwrap() {
+            Ok(o) => Some(o),
+            Err(_) => None,
+        }
+    } else {
+        return None;
+    }
 }
