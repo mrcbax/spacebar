@@ -56,12 +56,6 @@ fn main() {
                          .help("Search the system clipboard for a spacebar")
                          .required(false)
                          .takes_value(false))
-                    .arg(Arg::with_name("clipboard_fuzzy")
-                         .short("z")
-                         .long("clipboard_fuzzy")
-                         .help("Search for a spacebar using a spacebar segment from the clipboard.")
-                         .required(false)
-                         .takes_value(false))
                     .arg(Arg::with_name("web")
                          .short("w")
                          .long("website")
@@ -124,13 +118,10 @@ fn main() {
 
     if let Some(matches_search) = matches.subcommand_matches("search") {
         if matches_search.is_present("clipboard") {
-
-        }
-        if matches_search.is_present("clipboard_fuzzy") {
-
+            unimplemented!();
         }
         if matches_search.is_present("web") {
-
+            unimplemented!();
         }
         if matches_search.is_present("file") {
             match matches_search.value_of("file") {
