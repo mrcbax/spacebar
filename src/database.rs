@@ -1,7 +1,9 @@
 use super::generator::Spacebar;
+use super::parser::*;
 
 use log::*;
 use rusqlite::{params, NO_PARAMS, Connection, OpenFlags};
+use prettytable::Table;
 
 fn ensure_integrity(conn: &Connection) {
     let mut statement = conn.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='spacebars'").unwrap();
@@ -88,4 +90,40 @@ pub fn select_spacebar(conn: &Connection, spacebar: i64) -> Option<Spacebar> {
         },
     };
     return spacebar;
+}
+
+pub fn show_spacebars(conn: &Connection) {
+    let mut statement = conn.prepare("SELECT * FROM spacebars;").unwrap();
+    let spacebars_iter = match statement.query_map(NO_PARAMS, |row| {
+        Ok(Spacebar {
+            spacebar: row.get(1).unwrap(),
+            name: row.get(2).unwrap(),
+            description: match row.get(3) {
+                Ok(o) => Some(o),
+                Err(_) => None,
+            }
+        })
+    }) {
+        Ok(o) => o,
+        Err(e) => {
+            debug!("{}", e);
+            info!("Failed to parse database output.");
+            std::process::exit(1);
+        }
+    };
+    let mut spacebars_gen: Vec<Spacebar> = vec!();
+    for spacebar in spacebars_iter {
+        spacebars_gen.push(spacebar.unwrap());
+    }
+    let mut table = Table::new();
+    table.add_row(row![BwbFb => "NAME", "DESCRIPTION", "SPACEBAR"]);
+    for spacebar in spacebars_gen {
+        if spacebar.description.is_some() {
+            table.add_row(row![spacebar.name.as_str(), spacebar.description.unwrap().as_str(), c -> format!("⭲{}⭰", bin_to_string(spacebar.spacebar))]);
+            table.printstd();
+        } else {
+            table.add_row(row![spacebar.name.as_str(), "", c -> format!("⭲{}⭰", bin_to_string(spacebar.spacebar))]);
+            table.printstd();
+        }
+    }
 }

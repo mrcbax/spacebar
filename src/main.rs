@@ -153,4 +153,8 @@ fn main() {
             }
         }
     }
-}// ​​﻿﻿​﻿​﻿​​﻿​﻿﻿​​​​﻿﻿​﻿﻿​​​​​​​﻿​​​​﻿​​​﻿​​﻿​​﻿​​​​​﻿​﻿﻿​﻿​﻿﻿
+
+    if let Some(_) = matches.subcommand_matches("show") {
+        database::show_spacebars(&conn);
+    }
+}
