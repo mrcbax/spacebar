@@ -120,10 +120,9 @@ pub fn show_spacebars(conn: &Connection) {
     for spacebar in spacebars_gen {
         if spacebar.description.is_some() {
             table.add_row(row![spacebar.name.as_str(), spacebar.description.unwrap().as_str(), c -> format!("⭲{}⭰", bin_to_string(spacebar.spacebar))]);
-            table.printstd();
         } else {
             table.add_row(row![spacebar.name.as_str(), "", c -> format!("⭲{}⭰", bin_to_string(spacebar.spacebar))]);
-            table.printstd();
         }
     }
+    table.printstd();
 }
