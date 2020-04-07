@@ -4,6 +4,7 @@ use std::fs;
 
 use log::*;
 use prettytable::Table;
+use reqwest::StatusCode;
 
 pub fn locate_spacebar(body: String) -> Option<i64> {
     if body.contains(ZERO) || body.contains(ONE) {
@@ -74,14 +75,27 @@ pub fn string_to_bin(bar_rep: String) -> i64 {
 pub fn print_spacebar(spacebar: Spacebar) {
     let mut table = Table::new();
     if spacebar.description.is_some() {
-        table.add_row(row![BwbFb => "NAME", "DESCRIPTION", "SPACEBAR"]);
+        table.set_titles(row![BwbFb => "NAME", "DESCRIPTION", "SPACEBAR"]);
         table.add_row(row![spacebar.name.as_str(), spacebar.description.unwrap().as_str(), c -> format!("⭲{}⭰", bin_to_string(spacebar.spacebar))]);
         table.printstd();
     } else {
-        table.add_row(row![BwbFb => "NAME", "SPACEBAR"]);
+        table.set_titles(row![BwbFb => "NAME", "SPACEBAR"]);
         table.add_row(row![spacebar.name.as_str(), c -> format!("⭲{}⭰", bin_to_string(spacebar.spacebar))]);
         table.printstd();
     }
+}
+
+pub fn print_spacebars(spacebars: Vec<Spacebar>) {
+    let mut table = Table::new();
+    table.set_titles(row![BwbFb => "NAME", "DESCRIPTION", "SPACEBAR"]);
+    for spacebar in spacebars {
+        if spacebar.description.is_some() {
+            table.add_row(row![spacebar.name.as_str(), spacebar.description.unwrap().as_str(), c -> format!("⭲{}⭰", bin_to_string(spacebar.spacebar))]);
+        } else {
+            table.add_row(row![spacebar.name.as_str(), "", c -> format!("⭲{}⭰", bin_to_string(spacebar.spacebar))]);
+        }
+    }
+    table.printstd();
 }
 
 pub fn parse_file(path: &str) -> Option<i64> {
@@ -98,5 +112,30 @@ pub fn parse_clipboard() -> Option<i64> {
     match super::clipboard::parse_clipboard() {
         Some(s) => return locate_spacebar(s + " "), //add padding of a space
         None => return None,
+    }
+}
+
+pub fn parse_web(url: &str) -> Option<i64> {
+    let res = match reqwest::blocking::get(url) {
+        Ok(o) => o,
+        Err(e) => {
+            info!("Failed to make web request");
+            debug!("{}", e);
+            std::process::exit(1);
+        },
+    };
+
+    if res.status() != StatusCode::OK {
+        info!("Failed to get web resource: {}", res.status());
+        return None;
+    } else {
+        match res.text() {
+            Ok(o) => return locate_spacebar(o),
+            Err(e) => {
+                info!("Got invalid response from server.");
+                debug!("{}", e);
+                return None;
+            },
+        }
     }
 }

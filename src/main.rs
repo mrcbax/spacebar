@@ -122,39 +122,43 @@ fn main() {
         if matches_search.is_present("clipboard") {
             match parser::parse_clipboard() {
                 Some(o) => match database::select_spacebar(&conn, o) {
-                    Some(s) => {
-                        parser::print_spacebar(s);
-                    },
+                    Some(s) => parser::print_spacebar(s),
                     None => println!("Found a spacebar, but it wasn't in the database. It could be someone elses' (spooky)"),
                 },
                 None => info!("Could not find spacebar in the clipboard"),
             }
         }
         if matches_search.is_present("web") {
-            unimplemented!();
+            match matches_search.value_of("web") {
+                Some(s) => {
+                    match parser::parse_web(s) {
+                        Some(o) => match database::select_spacebar(&conn, o) {
+                            Some(s) => parser::print_spacebar(s),
+                            None => println!("Found a spacebar, but it wasn't in the database. It could be someone elses' (spooky)"),
+                        },
+                        None => info!("Could not find spacebar at: {}", s),
+                    }
+                },
+                None => info!("No url provided."),
+            }
         }
         if matches_search.is_present("file") {
             match matches_search.value_of("file") {
-
                 Some(s) => {
                     match parser::parse_file(s) {
                         Some(o) => match database::select_spacebar(&conn, o) {
-                            Some(s) => {
-                                parser::print_spacebar(s);
-                            },
+                            Some(s) => parser::print_spacebar(s),
                             None => println!("Found a spacebar, but it wasn't in the database. It could be someone elses' (spooky)"),
                         },
                         None => info!("Could not find spacebar in file: {}", s),
                     }
                 },
-                None => {
-                    info!("No file path provided.");
-                },
+                None => info!("No file path provided."),
             }
         }
     }
 
     if let Some(_) = matches.subcommand_matches("show") {
-        database::show_spacebars(&conn);
+        parser::print_spacebars(database::show_spacebars(&conn));
     }
 }
