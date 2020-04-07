@@ -26,8 +26,6 @@ pub fn generate_spacebar(name: String, desc: Option<String>) -> Spacebar {
         description: desc,
     };
 
-    gen_bar = parser::string_to_bin(parser::bin_to_string(gen_bar));
-
     clipboard::export_clipboard(parser::bin_to_string(gen_bar));
     debug!("Created spacebar {:#?}", spacebar);
     return spacebar;

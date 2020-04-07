@@ -3,6 +3,7 @@ use super::generator::*;
 use std::fs;
 
 use log::*;
+use prettytable::Table;
 
 pub fn locate_spacebar(body: String) -> Option<i64> {
     if body.contains(ZERO) || body.contains(ONE) {
@@ -48,11 +49,11 @@ pub fn string_to_bin(bar_rep: String) -> i64 {
     let mut bin_rep: i64 = 0;
     let mut iters = 0;
     for c in bar_rep.chars() {
-        if iters >= 63 {
+        if iters >= 62 {
             break;
         }
         iters += 1;
-        //debug!("s{:#b}\t{}", bin_rep, bin_rep);
+        debug!("s{:#b}\t{}", bin_rep, bin_rep);
         if c.to_string().as_str() == ONE {
             bin_rep += 1;
             bin_rep = bin_rep.rotate_left(1);
@@ -61,17 +62,22 @@ pub fn string_to_bin(bar_rep: String) -> i64 {
         }
 
     }
-    bin_rep = bin_rep.rotate_right(1);
-    debug!("string to bin {:#b}\t{}", bin_rep, bin_rep);
+    //bin_rep = bin_rep.rotate_right(1);
+    debug!("f{:#b}\t{}", bin_rep, bin_rep);
     return bin_rep;
 }
 
 
 pub fn print_spacebar(spacebar: Spacebar) {
+    let mut table = Table::new();
     if spacebar.description.is_some() {
-        info!("name: {}\tdescription: {}\tspacebar: ⮱{}⮰", spacebar.name, spacebar.description.unwrap(), bin_to_string(spacebar.spacebar));
+        table.add_row(row![BwbFb => "NAME", "DESCRIPTION", "SPACEBAR"]);
+        table.add_row(row![spacebar.name.as_str(), spacebar.description.unwrap().as_str(), c -> format!("⮱{}⮰", bin_to_string(spacebar.spacebar))]);
+        table.printstd();
     } else {
-        info!("name: {}\tspacebar: ⮱{}⮰", spacebar.name, bin_to_string(spacebar.spacebar));
+        table.add_row(row![BwbFb => "NAME", "SPACEBAR"]);
+        table.add_row(row![spacebar.name.as_str(), c -> format!("⮱{}⮰", bin_to_string(spacebar.spacebar))]);
+        table.printstd();
     }
 }
 

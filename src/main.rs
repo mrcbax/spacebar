@@ -1,5 +1,7 @@
 #[macro_use]
 extern crate clap;
+#[macro_use]
+extern crate prettytable;
 
 pub mod database;
 pub mod generator;
@@ -130,7 +132,6 @@ fn main() {
                     match parser::parse_file(s) {
                         Some(o) => match database::select_spacebar(&conn, o) {
                             Some(s) => {
-                                print!("Found: ");
                                 parser::print_spacebar(s);
                             },
                             None => println!("Found a spacebar, but it wasn't in the database. It could be someone elses' (spooky)"),
