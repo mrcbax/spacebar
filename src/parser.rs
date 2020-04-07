@@ -75,11 +75,11 @@ pub fn print_spacebar(spacebar: Spacebar) {
     let mut table = Table::new();
     if spacebar.description.is_some() {
         table.add_row(row![BwbFb => "NAME", "DESCRIPTION", "SPACEBAR"]);
-        table.add_row(row![spacebar.name.as_str(), spacebar.description.unwrap().as_str(), c -> format!("⮩{}⮨", bin_to_string(spacebar.spacebar))]);
+        table.add_row(row![spacebar.name.as_str(), spacebar.description.unwrap().as_str(), c -> format!("⭆{}⭅", bin_to_string(spacebar.spacebar))]);
         table.printstd();
     } else {
         table.add_row(row![BwbFb => "NAME", "SPACEBAR"]);
-        table.add_row(row![spacebar.name.as_str(), c -> format!("⮩{}⮨", bin_to_string(spacebar.spacebar))]);
+        table.add_row(row![spacebar.name.as_str(), c -> format!("⭆{}⭅", bin_to_string(spacebar.spacebar))]);
         table.printstd();
     }
 }
