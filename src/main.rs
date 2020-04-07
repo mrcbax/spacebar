@@ -6,12 +6,12 @@ pub mod generator;
 pub mod clipboard;
 pub mod parser;
 
+
 use std::env;
 use std::fs;
 
 use clap::{App, Arg, SubCommand};
 use log::*;
-use rusqlite::Connection;
 
 fn main() {
     let mut builder = env_logger::Builder::from_default_env();
@@ -111,7 +111,6 @@ fn main() {
     if let Some(matches_new) = matches.subcommand_matches("new") {
         if matches_new.is_present("name") {
             let spacebar: generator::Spacebar;
-            debug!("{}", format!("{:b}", spacebar.spacebar));
             if matches_new.is_present("description") {
                 spacebar = generator::generate_spacebar(matches_new.value_of("name").unwrap().to_string(), Some(matches_new.value_of("description").unwrap().to_string()));
             } else {
@@ -134,9 +133,24 @@ fn main() {
 
         }
         if matches_search.is_present("file") {
+            match matches_search.value_of("file") {
 
+                Some(s) => {
+                    match parser::parse_file(s) {
+                        Some(o) => match database::select_spacebar(&conn, o) {
+                            Some(s) => {
+                                print!("Found: ");
+                                parser::print_spacebar(s);
+                            },
+                            None => println!("Found a spacebar, but it wasn't in the database. It could be someone elses' (spooky)"),
+                        },
+                        None => info!("Could not find spacebar in file: {}", s),
+                    }
+                },
+                None => {
+                    info!("No file path provided.");
+                },
+            }
         }
     }
-
-    println!("Hello, world!");
-}
+}// ​​﻿﻿​﻿​﻿​​﻿​﻿﻿​​​​﻿﻿​﻿﻿​​​​​​​﻿​​​​﻿​​​﻿​​﻿​​﻿​​​​​﻿​﻿﻿​﻿​﻿﻿

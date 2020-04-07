@@ -41,10 +41,12 @@ pub fn insert_spacebar(conn: &Connection, spacebar: Spacebar) {
     }
 }
 
+#[allow(unused)] //for future use.
 pub fn update_spacebar(conn: &Connection, spacebar: Spacebar) {
     unimplemented!();
 }
 
+#[allow(unused)] //for future use.
 pub fn delete_spacebar(conn: &Connection, spacebar: Spacebar) {
     match conn.execute("DELETE FROM spacebars WHERE spacebar = $1", params![spacebar.spacebar]) {
         Ok(o) => info!("Deleted {} spacebar(s)", o),
@@ -55,32 +57,35 @@ pub fn delete_spacebar(conn: &Connection, spacebar: Spacebar) {
     }
 }
 
-pub fn select_spacebar(conn: &Connection, spacebar: Spacebar) -> Option<Spacebar> {
+pub fn select_spacebar(conn: &Connection, spacebar: i64) -> Option<Spacebar> {
     //SELECT * FROM spacebars WHERE spacebar = $1
     let mut statement = conn.prepare("SELECT * FROM spacebars WHERE spacebar=$1").unwrap();
-    let mut spacebars_iter = match statement.query_map(params![spacebar.spacebar], |row| {
-        Ok(Spacebar {
-            spacebar: row.get(1).unwrap(),
-            name: row.get(2).unwrap(),
-            description: Some(row.get(3).unwrap()),
-        })
-    }) {
-            Ok(o) => o,
-            Err(e) => {
-                error!("Failed to parse database response.");
-                debug!("{}", e);
-                std::process::exit(1);
-            },
-        };
-    if spacebars_iter.next().is_some() {
-        match spacebars_iter.next().unwrap() {
-            Ok(o) => return Some(o),
-            Err(e) => {
-                debug!("{}", e);
-                return None;
-            },
-        }
-    } else {
-        return None;
-    }
+    let response = statement.query(params![spacebar]);
+    let spacebar: Option<Spacebar> = match response {
+        Ok(mut rows) => {
+            match rows.next() {
+                Ok(row) => {
+                    if row.is_some() {
+                        Some(Spacebar {
+                            spacebar: row.unwrap().get(1).unwrap(),
+                            name: row.unwrap().get(2).unwrap(),
+                            description: match row.unwrap().get(3) {
+                                Ok(o) => Some(o),
+                                Err(_) => None,
+                            }
+                        })
+                    } else {
+                        None
+                    }
+                }
+                Err(_) => None,
+            }
+        },
+        Err(e) => {
+            error!("Failed to parse database response.");
+            debug!("{}", e);
+            std::process::exit(1);
+        },
+    };
+    return spacebar;
 }

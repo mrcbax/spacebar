@@ -1,5 +1,7 @@
 use super::generator::*;
 
+use std::fs;
+
 use log::*;
 
 pub fn locate_spacebar(body: String) -> Option<i64> {
@@ -18,33 +20,12 @@ pub fn locate_spacebar(body: String) -> Option<i64> {
         } else if ptr_start_one.is_some() {
             start = ptr_start_zero.unwrap();
         } else {
+            debug!("return none in ptr_start");
             return None;
         }
-
-        let ptr_end_zero = body.rfind(ZERO);
-        let ptr_end_one = body.rfind(ONE);
-        let end;
-        if ptr_end_zero.is_some() && ptr_end_one.is_some() {
-            if ptr_end_zero.unwrap() > ptr_end_one.unwrap() {
-                end = ptr_end_zero.unwrap();
-            } else {
-                end = ptr_end_one.unwrap();
-            }
-        } else if ptr_end_zero.is_some() {
-            end = ptr_end_zero.unwrap();
-        } else if ptr_end_one.is_some() {
-            end = ptr_end_zero.unwrap();
-        } else {
-            return None;
-        }
-
-        let len = end - start;
-        if len != 64 {
-            return None;
-        }
-
-        return Some(string_to_bin(String::from(body.split_at(start).1.split_at(start + 64).0)));
+        return Some(string_to_bin(String::from(body.split_at(start).1.to_string().split_at(193).0)));
     } else {
+        debug!("return none in contains");
         return None;
     }
 }
@@ -63,14 +44,43 @@ pub fn bin_to_string(num_rep: i64) -> String {
     return bar_rep
 }
 
-fn string_to_bin(bar_rep: String) -> i64 {
-    let bin_rep = String::from("0b");
+pub fn string_to_bin(bar_rep: String) -> i64 {
+    let mut bin_rep: i64 = 0;
+    let mut iters = 0;
     for c in bar_rep.chars() {
-        if c.to_string().as_str() == ZERO {
-            bin_rep += "0";
-        } else {
-            bin_rep += "1";
+        if iters >= 63 {
+            break;
         }
+        iters += 1;
+        //debug!("s{:#b}\t{}", bin_rep, bin_rep);
+        if c.to_string().as_str() == ONE {
+            bin_rep += 1;
+            bin_rep = bin_rep.rotate_left(1);
+        } else {
+            bin_rep = bin_rep.rotate_left(1);
+        }
+
     }
-    return bin_rep.parse::<i64>().unwrap();
+    bin_rep = bin_rep.rotate_right(1);
+    debug!("string to bin {:#b}\t{}", bin_rep, bin_rep);
+    return bin_rep;
+}
+
+
+pub fn print_spacebar(spacebar: Spacebar) {
+    if spacebar.description.is_some() {
+        info!("name: {}\tdescription: {}\tspacebar: ⮱{}⮰", spacebar.name, spacebar.description.unwrap(), bin_to_string(spacebar.spacebar));
+    } else {
+        info!("name: {}\tspacebar: ⮱{}⮰", spacebar.name, bin_to_string(spacebar.spacebar));
+    }
+}
+
+pub fn parse_file(path: &str) -> Option<i64> {
+    match fs::read_to_string(path) {
+        Ok(o) => return locate_spacebar(o),
+        Err(e) => {
+            info!("failed to read file: {}", e);
+            return None;
+        },
+    }
 }

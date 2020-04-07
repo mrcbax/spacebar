@@ -1,5 +1,5 @@
-use super::clipboard::*;
-use super::parser::*;
+use super::clipboard;
+use super::parser;
 
 use log::*;
 use rand::Rng;
@@ -17,13 +17,16 @@ pub struct Spacebar {
 
 pub fn generate_spacebar(name: String, desc: Option<String>) -> Spacebar {
     let mut rng = rand::thread_rng();
-    let gen_bar: i64 = rng.gen();
+    let mut gen_bar: i64 = rng.gen();
+    gen_bar = gen_bar.abs();
 
     let spacebar: Spacebar = Spacebar {
         spacebar: gen_bar,
         name: name,
         description: desc,
     };
+
+    gen_bar = parser::string_to_bin(parser::bin_to_string(gen_bar));
 
     clipboard::export_clipboard(parser::bin_to_string(gen_bar));
     debug!("Created spacebar {:#?}", spacebar);
