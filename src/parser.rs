@@ -96,7 +96,7 @@ pub fn parse_file(path: &str) -> Option<i64> {
 
 pub fn parse_clipboard() -> Option<i64> {
     match super::clipboard::parse_clipboard() {
-        Some(s) => return locate_spacebar(s),
+        Some(s) => return locate_spacebar(s + " "), //add padding of a space
         None => return None,
     }
 }
