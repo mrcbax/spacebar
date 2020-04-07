@@ -24,7 +24,10 @@ pub fn locate_spacebar(body: String) -> Option<i64> {
             debug!("return none in ptr_start");
             return None;
         }
-        return Some(string_to_bin(String::from(body.split_at(start).1.to_string().split_at(193).0)));
+        if start == 0 {
+            return Some(string_to_bin(String::from(body.split_at(187).0)));
+        }
+        return Some(string_to_bin(String::from(body.split_at(start).1.to_string().split_at(187).0)));
     } else {
         debug!("return none in contains");
         return None;
@@ -49,7 +52,7 @@ pub fn string_to_bin(bar_rep: String) -> i64 {
     let mut bin_rep: i64 = 0;
     let mut iters = 0;
     for c in bar_rep.chars() {
-        if iters >= 62 {
+        if iters >= 61 {
             break;
         }
         iters += 1;
@@ -72,11 +75,11 @@ pub fn print_spacebar(spacebar: Spacebar) {
     let mut table = Table::new();
     if spacebar.description.is_some() {
         table.add_row(row![BwbFb => "NAME", "DESCRIPTION", "SPACEBAR"]);
-        table.add_row(row![spacebar.name.as_str(), spacebar.description.unwrap().as_str(), c -> format!("⮱{}⮰", bin_to_string(spacebar.spacebar))]);
+        table.add_row(row![spacebar.name.as_str(), spacebar.description.unwrap().as_str(), c -> format!("⮩{}⮨", bin_to_string(spacebar.spacebar))]);
         table.printstd();
     } else {
         table.add_row(row![BwbFb => "NAME", "SPACEBAR"]);
-        table.add_row(row![spacebar.name.as_str(), c -> format!("⮱{}⮰", bin_to_string(spacebar.spacebar))]);
+        table.add_row(row![spacebar.name.as_str(), c -> format!("⮩{}⮨", bin_to_string(spacebar.spacebar))]);
         table.printstd();
     }
 }
@@ -88,5 +91,12 @@ pub fn parse_file(path: &str) -> Option<i64> {
             info!("failed to read file: {}", e);
             return None;
         },
+    }
+}
+
+pub fn parse_clipboard() -> Option<i64> {
+    match super::clipboard::parse_clipboard() {
+        Some(s) => return locate_spacebar(s),
+        None => return None,
     }
 }

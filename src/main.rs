@@ -120,7 +120,15 @@ fn main() {
 
     if let Some(matches_search) = matches.subcommand_matches("search") {
         if matches_search.is_present("clipboard") {
-            unimplemented!();
+            match parser::parse_clipboard() {
+                Some(o) => match database::select_spacebar(&conn, o) {
+                    Some(s) => {
+                        parser::print_spacebar(s);
+                    },
+                    None => println!("Found a spacebar, but it wasn't in the database. It could be someone elses' (spooky)"),
+                },
+                None => info!("Could not find spacebar in the clipboard"),
+            }
         }
         if matches_search.is_present("web") {
             unimplemented!();
