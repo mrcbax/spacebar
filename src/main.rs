@@ -123,5 +123,20 @@ fn main() {
         }
     }
 
+    if let Some(matches_search) = matches.subcommand_matches("search") {
+        if matches_search.is_present("clipboard") {
+
+        }
+        if matches_search.is_present("clipboard_fuzzy") {
+
+        }
+        if matches_search.is_present("web") {
+
+        }
+        if matches_search.is_present("file") {
+
+        }
+    }
+
     println!("Hello, world!");
 }
