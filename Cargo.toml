@@ -17,7 +17,7 @@ log = "0.4.8"
 prettytable-rs = "0.8.0"
 rand = "0.7.3"
 reqwest = { version = "0.10.4", features = ["blocking"] }
-rusqlite = "0.21.0"
+rusqlite = "0.24.2"
 spinners = "1.2.0"
 
 [profile.release]
